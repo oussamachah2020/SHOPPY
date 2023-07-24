@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  background: #fcfcfc;
+}
+
+.hero-container {
+  background-image: url("/public/assets/shopping-online.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 500px;
+  width: 100%;
+}
+
+.hero-cover {
+  background-color: rgba(0, 0, 0, 0.653);
+  height: 500px;
+  width: 100%;
+}
