@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductType {
   id: string;
@@ -30,9 +30,9 @@ const Products = () => {
   }, []);
 
   return (
-    <div className="p-24">
+    <div className="py-24 md:p-24">
       <h2 className="mb-10 text-3xl text-black">Products</h2>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         {loading ? (
           <div className="flex justify-center items-center w-44">
             <CircularProgress />
@@ -41,9 +41,9 @@ const Products = () => {
           productsData.map((product) => (
             <div
               key={product.id}
-              className="card h-[100%] p-5 bg-base-100 shadow-xl"
+              className="card h-[100%] bg-base-100 shadow-xl pt-2"
             >
-              <figure className="w-full">
+              <figure>
                 <img
                   src={product.image}
                   alt="Shoes"
@@ -60,10 +60,11 @@ const Products = () => {
                     className="link"
                     onClick={() => setShowMore(!showMore)}
                   >
+                    {" "}
                     {showMore ? "Show less" : "Show more"}
                   </button>
                 </p>
-                <div className="card-actions flex justify-between items-center relative top-8">
+                <div className="card-actions flex justify-between items-center relative top-5">
                   <p>{product.price}$</p>
                   <button className="btn btn-primary">Buy Now</button>
                 </div>

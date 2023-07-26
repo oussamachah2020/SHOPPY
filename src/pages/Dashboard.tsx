@@ -1,7 +1,8 @@
+import Footer from "../components/widgets/Footer";
 import Hero from "../components/widgets/Hero";
 import Navbar from "../components/widgets/Navbar";
-import React from "react";
 import Products from "../components/widgets/Products";
+import PromoBlock from "../components/widgets/PromoBlock";
 
 const Dashboard = () => {
   return (
@@ -14,6 +15,12 @@ const Dashboard = () => {
       </div>
       <div>
         <Products />
+      </div>
+      <div>
+        <PromoBlock />
+      </div>
+      <div>
+        <Footer />
       </div>
     </div>
   );

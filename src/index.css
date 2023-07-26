@@ -10,12 +10,31 @@
   background-image: url("/public/assets/shopping-online.png");
   background-repeat: no-repeat;
   background-size: cover;
-  height: 500px;
+  /* min-height: 600px; */
   width: 100%;
 }
 
 .hero-cover {
   background-color: rgba(0, 0, 0, 0.653);
-  height: 500px;
+  /* min-height: 600px; */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.promo-block-container {
+  background-image: url("/public/assets/shopping.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 550px;
+  width: 100%;
+}
+
+.promo-block-cover {
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.653);
+  height: 550px;
   width: 100%;
 }
