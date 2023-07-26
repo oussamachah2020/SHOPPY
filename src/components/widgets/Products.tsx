@@ -51,7 +51,7 @@ const Products = () => {
                 />
               </figure>
               <div className="card-body">
-                <h2 className="card-title text-white">{product.title}</h2>
+                <h2 className="card-title text-black">{product.title}</h2>
                 <p className="text-black font-semibold">
                   <br />
                   {showMore
