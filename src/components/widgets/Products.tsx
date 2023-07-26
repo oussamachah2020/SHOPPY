@@ -41,7 +41,7 @@ const Products = () => {
           productsData.map((product) => (
             <div
               key={product.id}
-              className="card h-[100%] bg-base-100 shadow-xl pt-2"
+              className="card h-[100%]  shadow-xl pt-2 bg-white"
             >
               <figure>
                 <img
@@ -51,8 +51,9 @@ const Products = () => {
                 />
               </figure>
               <div className="card-body">
-                <h2 className="card-title">{product.title}</h2>
-                <p className="text-white font-semibold">
+                <h2 className="card-title text-white">{product.title}</h2>
+                <p className="text-black font-semibold">
+                  <br />
                   {showMore
                     ? product.description
                     : `${product.description?.substring(0, 250)}`}
