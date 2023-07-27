@@ -47,7 +47,7 @@ function SignIn({ handleClose }: { handleClose: () => void }) {
   return (
     <div className="mt-16">
       <Dialog.Title className="text-black text-center text-xl">
-        Sign Up
+        Sign In
       </Dialog.Title>
       <form onSubmit={handleSubmit} className="mt-5">
         <div className="form-control">
@@ -95,7 +95,7 @@ function SignIn({ handleClose }: { handleClose: () => void }) {
           type="submit"
           className="btn btn-primary mt-5 w-full"
         >
-          Create an account
+          Login
         </button>
       </form>
     </div>

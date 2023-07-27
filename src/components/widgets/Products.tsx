@@ -1,5 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
+import { auth } from "../../firebase";
+import toast from "react-hot-toast";
 
 interface ProductType {
   id: string;
@@ -13,6 +15,8 @@ const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const user = auth.currentUser;
 
   async function fetchProducts() {
     setLoading(true);
@@ -28,6 +32,14 @@ const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const hanldeProductSelection = () => {
+    if (!user) {
+      toast("You must be logged in");
+    } else {
+      console.log("ok");
+    }
+  };
 
   return (
     <div className="py-24 md:p-24">
@@ -67,7 +79,12 @@ const Products = () => {
                 </p>
                 <div className="card-actions flex justify-between items-center relative top-5">
                   <p>{product.price}$</p>
-                  <button className="btn btn-primary">Buy Now</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={hanldeProductSelection}
+                  >
+                    Buy Now
+                  </button>
                 </div>
               </div>
             </div>
