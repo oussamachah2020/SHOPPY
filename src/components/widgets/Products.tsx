@@ -1,22 +1,24 @@
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { auth } from "../../firebase";
-import toast from "react-hot-toast";
-
-interface ProductType {
-  id: string;
-  image: string;
-  title: string;
-  description: string;
-  price: number;
-}
+// import { db } from "../../firebase";
+// import toast from "react-hot-toast";
+// import {
+//   collection,
+//   addDoc,
+//   query,
+//   where,
+//   onSnapshot,
+// } from "firebase/firestore";
+// import useAuthStore from "../../store/authStore";
+import { ProductType } from "../../types/types";
+import { productsStore } from "../../store/productsStore";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
-  const [showMore, setShowMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const user = auth.currentUser;
+  const { setSelectedProduct } = productsStore();
+  const navigate = useNavigate();
 
   async function fetchProducts() {
     setLoading(true);
@@ -33,12 +35,9 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  const hanldeProductSelection = () => {
-    if (!user) {
-      toast("You must be logged in");
-    } else {
-      console.log("ok");
-    }
+  const handleProductSelection = (product: ProductType) => {
+    setSelectedProduct(product);
+    navigate("/purchases");
   };
 
   return (
@@ -64,26 +63,13 @@ const Products = () => {
               </figure>
               <div className="card-body">
                 <h2 className="card-title text-black">{product.title}</h2>
-                <p className="text-black font-semibold">
-                  <br />
-                  {showMore
-                    ? product.description
-                    : `${product.description?.substring(0, 250)}`}
-                  <button
-                    className="link"
-                    onClick={() => setShowMore(!showMore)}
-                  >
-                    {" "}
-                    {showMore ? "Show less" : "Show more"}
-                  </button>
-                </p>
-                <div className="card-actions flex justify-between items-center relative top-5">
-                  <p>{product.price}$</p>
+                <div className="card-actions flex justify-center items-center relative top-5">
+                  <p className="text-black text-xl">{product.price}$</p>
                   <button
                     className="btn btn-primary"
-                    onClick={hanldeProductSelection}
+                    onClick={() => handleProductSelection(product)}
                   >
-                    Buy Now
+                    Acheter
                   </button>
                 </div>
               </div>

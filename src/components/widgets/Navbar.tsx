@@ -1,19 +1,19 @@
-import { Avatar, Badge, Button } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import Logo from "../../assets/shoppy-logo.svg";
 import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { useState } from "react";
 import { signOut } from "firebase/auth";
 import AuthModal from "../Modals/AuthModal";
 import { auth } from "../../firebase";
 import toast from "react-hot-toast";
+import useAuthStore from "../../store/authStore";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const user = auth.currentUser;
-  const userEmail = user?.email?.[0] || null;
+  const user = useAuthStore((v) => v.user);
+  const userEmail = user?.email?.[0];
 
   const handleClose = () => {
     setIsOpen(false);
@@ -61,15 +61,27 @@ function Navbar() {
         </div>
       </div>
       <div className="flex flex-nowrap gap-2 ">
-        <Button className="flex flex-nowrap gap-3">
-          <Badge badgeContent={4} color="warning">
-            <ShoppingBasketIcon sx={{ color: "#fff" }} />
-          </Badge>
-          <p className="text-white capitalize text-lg">Basket</p>
-        </Button>
+        {/* <details className="dropdown ">
+          <summary className="btn btn-ghost bg-transparent border-none">
+            <Badge badgeContent={selectedProducts.length} color="warning">
+              <ShoppingBasketIcon sx={{ color: "#fff" }} />
+            </Badge>
+            <p className="text-white capitalize text-lg">Basket</p>
+          </summary>
+          <ul className="p-2 shadow menu dropdown-content z-[1] bg-purple-700 text-white rounded-box w-52">
+            <li>
+              <Link to={"/purchases"}>Check your items</Link>
+            </li>
+            <li>
+              <Link to={""} onClick={emptyBasket}>
+                Empty your basket
+              </Link>
+            </li>
+          </ul>
+        </details> */}
       </div>
 
-      {user ? (
+      {user?.uid ? (
         <div className="dropdown dropdown-end">
           <div className="ml-5">
             <label tabIndex={0} className="cursor-pointer">

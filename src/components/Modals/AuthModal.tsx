@@ -19,7 +19,7 @@ type LoginModalProps = {
 };
 
 function SignIn({ handleClose }: { handleClose: () => void }) {
-  const onSubmit = () => {};
+  const onSubmit = async () => {};
 
   const { values, errors, handleChange, handleSubmit } = useFormik<signInType>({
     initialValues: {

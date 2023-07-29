@@ -4229,6 +4229,11 @@ linkify-it@^3.0.1:
   dependencies:
     uc.micro "^1.0.1"
 
+localstorage@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/localstorage/-/localstorage-1.0.1.tgz#3761bacf2886b14ce3598508e9699a9f02dd7c12"
+  integrity sha512-2L2RX3vh0lEARtDglRKxazh8lHCR6PGAZOsFXXpfkYr976WHcQS3xdriKhVzJLf3+GCmxvMkTtoDl0eCfg/3eQ==
+
 locate-path@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmjs.org/locate-path/-/locate-path-6.0.0.tgz"
