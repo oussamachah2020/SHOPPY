@@ -61,24 +61,19 @@ function Navbar() {
         </div>
       </div>
       <div className="flex flex-nowrap gap-2 ">
-        {/* <details className="dropdown ">
+        <details className="dropdown ">
           <summary className="btn btn-ghost bg-transparent border-none">
-            <Badge badgeContent={selectedProducts.length} color="warning">
-              <ShoppingBasketIcon sx={{ color: "#fff" }} />
-            </Badge>
-            <p className="text-white capitalize text-lg">Basket</p>
+            <p className="text-white capitalize text-lg">Language</p>
           </summary>
-          <ul className="p-2 shadow menu dropdown-content z-[1] bg-purple-700 text-white rounded-box w-52">
-            <li>
-              <Link to={"/purchases"}>Check your items</Link>
+          <ul className="shadow menu dropdown-content z-[1] bg-white text-purple-600 rounded-box w-40 p-2">
+            <li className="text-start  text-black">
+              <button>Frençais</button>
             </li>
-            <li>
-              <Link to={""} onClick={emptyBasket}>
-                Empty your basket
-              </Link>
+            <li className=" text-black">
+              <button>Arabe</button>
             </li>
           </ul>
-        </details> */}
+        </details>
       </div>
 
       {user?.uid ? (
