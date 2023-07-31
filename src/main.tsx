@@ -10,6 +10,8 @@ import Purchase from "./pages/Purchase";
 import global_fr from "./translation/fr/gloabal.json";
 import i18next from "i18next";
 import { I18nextProvider, initReactI18next } from "react-i18next";
+import AuthModal from "./pages/admin/AuthModal";
+import StoreOwnerDashboard from "./pages/admin/StoreOwnerDashboard";
 
 i18next.use(initReactI18next).init({
   resources: {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
   {
     path: "/purchases",
     element: <Purchase />,
+  },
+  {
+    path: "/sign-in",
+    element: <AuthModal />,
+  },
+  {
+    path: "/admin",
+    element: <StoreOwnerDashboard />,
   },
 ]);
 

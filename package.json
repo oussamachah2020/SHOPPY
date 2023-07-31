@@ -15,12 +15,15 @@
     "@headlessui/react": "^1.7.15",
     "@mui/icons-material": "^5.14.1",
     "@mui/material": "^5.14.1",
+    "chart.js": "^4.3.2",
+    "faker": "^6.6.6",
     "firebase": "^10.1.0",
     "firebase-tools": "^12.4.5",
     "formik": "^2.4.2",
     "i18next": "^23.4.1",
     "localstorage": "^1.0.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.0.2",
@@ -29,6 +32,7 @@
     "zustand": "^4.3.9"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/node": "^20.4.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

@@ -11,13 +11,14 @@ import { useEffect, useState } from "react";
 // } from "firebase/firestore";
 // import useAuthStore from "../../store/authStore";
 import { ProductType } from "../../types/types";
-import { productsStore } from "../../store/productsStore";
+// import { productsStore } from "../../store/productsStore";
 import { useNavigate } from "react-router-dom";
+import useProductsStore from "../../store/productsStore";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { setSelectedProduct } = productsStore();
+  const { setSelectedProduct } = useProductsStore();
   const navigate = useNavigate();
 
   async function fetchProducts() {

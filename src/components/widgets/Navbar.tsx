@@ -1,31 +1,31 @@
-import { Avatar, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import Logo from "../../assets/shoppy-logo.svg";
 import SearchIcon from "@mui/icons-material/Search";
-import LoginIcon from "@mui/icons-material/Login";
-import { useState } from "react";
-import { signOut } from "firebase/auth";
-import AuthModal from "../Modals/AuthModal";
-import { auth } from "../../firebase";
-import toast from "react-hot-toast";
-import useAuthStore from "../../store/authStore";
+// import LoginIcon from "@mui/icons-material/Login";
+// import { useState } from "react";
+// import { signOut } from "firebase/auth";
+// import AuthModal from "../Modals/AuthModal";
+// import { auth } from "../../firebase";
+// import toast from "react-hot-toast";
+// import useAuthStore from "../../store/authStore";
 
 function Navbar() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const user = useAuthStore((v) => v.user);
-  const userEmail = user?.email?.[0];
+  // const user = useAuthStore((v) => v.user);
+  // const userEmail = user?.email?.[0];
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
+  // const handleClose = () => {
+  //   setIsOpen(false);
+  // };
+  // const handleOpen = () => {
+  //   setIsOpen(true);
+  // };
 
-  const Logout = () => {
-    signOut(auth);
-    toast.success("logout completed");
-  };
+  // const Logout = () => {
+  //   signOut(auth);
+  //   toast.success("logout completed");
+  // };
 
   return (
     <div className="navbar bg-[#5a38e4] px-2">
@@ -76,7 +76,7 @@ function Navbar() {
         </details>
       </div>
 
-      {user?.uid ? (
+      {/* {user?.uid ? (
         <div className="dropdown dropdown-end">
           <div className="ml-5">
             <label tabIndex={0} className="cursor-pointer">
@@ -114,7 +114,7 @@ function Navbar() {
         </Button>
       )}
 
-      <AuthModal {...{ isOpen, handleClose }} />
+      <AuthModal {...{ isOpen, handleClose }} /> */}
     </div>
   );
 }

@@ -8,7 +8,7 @@ interface AuthStore {
 
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,
-  setUser: (user: firebase.User) => set({ user }),
+  setUser: (user: firebase.User | null) => set({ user }),
 }));
 
 export default useAuthStore;

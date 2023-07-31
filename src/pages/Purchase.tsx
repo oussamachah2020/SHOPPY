@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { productsStore } from "../store/productsStore";
 import { useFormik } from "formik";
 import { PurchaseSchema } from "../types/validation.schemas";
 import { PurchaseType } from "../types/types";
@@ -7,11 +6,12 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import useProductsStore from "../store/productsStore";
 
 const Purchase = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>();
-  const { selectedProduct } = productsStore();
+  const { selectedProduct } = useProductsStore();
   const navigate = useNavigate();
 
   const handlePurchase = async () => {
@@ -69,17 +69,21 @@ const Purchase = () => {
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (
-    <div className="w-full py-24 md:p-24 ">
-      <h2 className="mb-10 text-3xl text-black">Purchased Products</h2>
-      <div className="shadow-xl p-10 rounded-lg flex flex-wrap md:flex-nowrap justify-between items-start relative">
+    <div className="w-full py-24 px-2 md:px-24 ">
+      <h2 className="mb-10 text-xl md:text-3xl text-black">
+        Purchased Products
+      </h2>
+      <div className="shadow-xl md:p-10 rounded-lg flex flex-wrap justify-start md:flex-nowrap md:justify-between items-start relative">
         <img
           src={selectedProduct?.image}
           alt={selectedProduct?.title}
-          className="mr-10 md:w-[300px] "
+          className="mr-10 w-[200px] md:w-[300px] "
         />
         <div className="card-body">
-          <h2 className="card-title text-black">{selectedProduct?.title}</h2>
-          <p className="text-black font-semibold w-[80%] leading-8 mt-5">
+          <h2 className="card-title text-sm w-[100%] md:text-xl text-black">
+            {selectedProduct?.title}
+          </h2>
+          <p className="text-black font-semibold w-[110%] md:w-[80%] text-sm md:text-xl leading-8 mt-5">
             {selectedProduct?.description}
           </p>
           <div>
@@ -123,13 +127,13 @@ const Purchase = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[120%]">
+        <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[200%]">
           <h3 className="w-full text-black mb-5">
             To buy please enter your information
           </h3>
           <form
             onSubmit={handleSubmit}
-            className=" flex flex-wrap gap-3 justify-start items-center w-[100%]"
+            className=" flex flex-wrap gap-3 justify-start items-start"
           >
             <input
               type="text"
