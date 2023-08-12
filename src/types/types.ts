@@ -28,3 +28,22 @@ export interface PurchaseType {
   address: string;
   city: string;
 }
+
+export interface fetchedProduct {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  imageURL: string;
+  pieces: string;
+  price: string;
+}
+
+export interface adminProduct {
+  title: string;
+  description: string;
+  category: string;
+  imageURL: string;
+  pieces: string;
+  price: string;
+}

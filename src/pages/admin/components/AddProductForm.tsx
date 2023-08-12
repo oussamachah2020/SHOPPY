@@ -1,15 +1,13 @@
-import { Box, Typography } from "@mui/material";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { Box, IconButton, Typography } from "@mui/material";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { ref as databaseRef, push, set } from "firebase/database";
 import { useFormik } from "formik";
-import { db } from "../../../firebase";
-import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "../../../firebase";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import CloseIcon from "@mui/icons-material/Close";
+import { adminProduct } from "../../../types/types";
+import { v4 as uuidv4 } from "uuid";
 
 const style = {
   position: "absolute" as const,
@@ -22,34 +20,75 @@ const style = {
   p: 4,
 };
 
-function AddProductForm({ userId }: { userId: string | undefined }) {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+function AddProductForm({
+  userId,
+  closeModal,
+}: {
+  userId: string | undefined;
+  closeModal: () => void;
+}) {
+  const [selectedImage, setSelectedImage] = useState<File | null>();
   const [progress, setProgress] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    setSelectedFile(file || null);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
 
-    const storage = getStorage();
+  const onSubmit = async () => {};
 
-    // Check if a file is selected
-    if (!selectedFile) {
-      console.error("No file selected.");
+  const { values, handleChange, handleSubmit } = useFormik<adminProduct>({
+    initialValues: {
+      title: "",
+      description: "",
+      category: "",
+      imageURL: "",
+      price: "",
+      pieces: "",
+    },
+    onSubmit,
+  });
+
+  const addProduct = async () => {
+    setIsLoading(true);
+
+    const dbRef = databaseRef(db, "/products/" + userId);
+
+    if (dbRef.key === userId) {
+      const newProductRef = push(dbRef);
+      set(newProductRef, { ...values, id: uuidv4() })
+        .then(() => {
+          toast.success("Products Added Successfully");
+          closeModal();
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  };
+
+  function cancelUpload() {
+    setSelectedImage(null);
+    setProgress(0);
+  }
+
+  useEffect(() => {
+    if (selectedImage == null) {
       return;
     }
 
-    // Create a reference to 'productsImages/<filename>'
-    const imageRef = ref(storage, `productsImages/${selectedFile.name}`);
+    const imageRef = ref(storage, `productsImages/${selectedImage?.name}`);
 
-    // Upload the file to Firebase Storage
-    const uploadTask = uploadBytesResumable(imageRef, selectedFile);
+    const uploadTask = uploadBytesResumable(imageRef, selectedImage);
 
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
+    const unsubscribe = uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // You can use this callback to track the progress of the upload if needed.
-        // For example, you can calculate the percentage of completion.
         const progressValue =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log(`Upload is ${progress}% done.`);
@@ -59,60 +98,66 @@ function AddProductForm({ userId }: { userId: string | undefined }) {
         console.error("Error uploading the file:", error);
       },
       () => {
-        // Upload completed successfully. You can now get the download URL.
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // Save the downloadURL to the 'values' object or wherever you need it.
           values.imageURL = downloadURL;
           console.log(downloadURL);
           toast.success("Image Uploaded successfully");
         });
       }
     );
-  };
 
-  const onSubmit = async () => {};
-
-  const { values, handleChange, handleSubmit } = useFormik<{
-    title: string;
-    description: string;
-    category: string;
-    imageURL: string;
-    price: string;
-    ownerId: string | undefined;
-  }>({
-    initialValues: {
-      title: "",
-      description: "",
-      category: "",
-      imageURL: "",
-      price: "",
-      ownerId: userId,
-    },
-    onSubmit,
-  });
-
-  const addProduct = async () => {
-    try {
-      await addDoc(collection(db, "products"), {
-        product: values,
-      }).then(() => {
-        toast.success("Product added successfully");
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  function cancelUpload() {
-    setSelectedFile(null);
-    setProgress(0);
-  }
+    return () => {
+      unsubscribe();
+    };
+  }, [selectedImage, values]);
 
   return (
     <Box sx={style}>
-      <Typography sx={{ color: "#000", textAlign: "center", fontSize: 18 }}>
-        Add Product
-      </Typography>
+      {isLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            flex: 1,
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            height: "100%",
+            width: "100%",
+            zIndex: 5,
+          }}
+        >
+          <span className="loading loading-dots loading-lg bg-primary"></span>
+          <Typography
+            sx={{
+              color: "#000",
+              fontSize: 16,
+              letterSpacing: 1,
+            }}
+          >
+            Uploading Product
+          </Typography>
+        </Box>
+      ) : null}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ color: "#000", textAlign: "center", fontSize: 18 }}>
+          Add Product
+        </Typography>
+        <IconButton sx={{ color: "red" }} onClick={closeModal}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
       <form onSubmit={handleSubmit} className="w-[100%] mt-5">
         <div className="form-group">
           <label className="label">
@@ -173,7 +218,7 @@ function AddProductForm({ userId }: { userId: string | undefined }) {
         <div className="form-group w-full">
           <label className="label w-full relative">
             <span className="label-text text-[#000000a6] text-md font-medium mt-3">
-              {selectedFile != null && progress > 0 ? (
+              {selectedImage != null && progress > 0 ? (
                 <div className="flex flex-row justify-around items-center w-full">
                   <p>Uploading</p>
                   <button
@@ -188,7 +233,7 @@ function AddProductForm({ userId }: { userId: string | undefined }) {
               )}
             </span>
           </label>
-          {selectedFile !== null && progress > 0 ? (
+          {selectedImage !== null && progress > 0 ? (
             <progress
               className="progress progress-primary w-full"
               value={progress}
@@ -201,6 +246,23 @@ function AddProductForm({ userId }: { userId: string | undefined }) {
               className="file-input file-input-bordered file-input-primary w-full  bg-white"
             />
           )}
+        </div>
+
+        <div className="form-group mt-3">
+          <label className="label">
+            <span className="label-text text-[#000000a6] text-md font-medium">
+              Number of Pieces
+            </span>
+          </label>
+          <input
+            type="number"
+            placeholder="Number of Pieces"
+            id="pieces"
+            name="pieces"
+            value={values.pieces}
+            onChange={handleChange}
+            className="input input-bordered input-primary w-full bg-white text-black"
+          />
         </div>
 
         <div className="form-control w-full mt-3">

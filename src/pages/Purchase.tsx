@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { PurchaseSchema } from "../types/validation.schemas";
 import { PurchaseType } from "../types/types";
-import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useProductsStore from "../store/productsStore";
+import { ref as databaseRef, push, set } from "firebase/database";
 
 const Purchase = () => {
   const [quantity, setQuantity] = useState<number>(1);
@@ -16,13 +16,21 @@ const Purchase = () => {
 
   const handlePurchase = async () => {
     try {
-      await addDoc(collection(db, "purchase"), {
-        userData: values,
-        product: { ...selectedProduct, quantity: quantity },
-      }).then(() => {
-        toast.success("Product purchase successfully");
-        navigate("/");
-      });
+      const dbRef = databaseRef(db, "purchase/");
+
+      if (dbRef.key) {
+        const newPurchaseRef = push(dbRef);
+
+        set(newPurchaseRef, {
+          userData: values,
+          product: { ...selectedProduct, quantity: quantity },
+        })
+          .then(() => {
+            toast.success("Product purchase successfully");
+            navigate("/");
+          })
+          .catch((err) => console.error(err));
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -69,17 +77,17 @@ const Purchase = () => {
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (
-    <div className="w-full py-24 px-2 md:px-24 ">
+    <div className="w-full py-20 md:py-10 px-2 md:px-24">
       <h2 className="mb-10 text-xl md:text-3xl text-black">
         Purchased Products
       </h2>
-      <div className="shadow-xl md:p-10 rounded-lg flex flex-wrap justify-start md:flex-nowrap md:justify-between items-start relative">
+      <div className="shadow-xl md:p-10 rounded-lg flex flex-wrap justify-center md:flex-nowrap md:justify-between items-center relative">
         <img
           src={selectedProduct?.image}
           alt={selectedProduct?.title}
-          className="mr-10 w-[200px] md:w-[300px] "
+          className="mr-10 w-[200px] md:w-[300px]"
         />
-        <div className="flex flex-col-reverse justify-start items-start md:flex-row">
+        <div className="flex flex-col-reverse justify-start items-center md:flex-row">
           <div className="card-body">
             <h2 className="card-title text-sm w-[100%] md:text-xl text-black">
               {selectedProduct?.title}
@@ -111,13 +119,13 @@ const Purchase = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[100%]">
+          <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[100%] md:w-[150%]">
             <h3 className="w-full text-black mb-5">
               To buy please enter your information
             </h3>
             <form
+              className=" flex flex-wrap gap-3 justify-start items-start w-[100%]"
               onSubmit={handleSubmit}
-              className=" flex flex-wrap gap-3 justify-start items-start"
             >
               <input
                 type="text"
@@ -160,30 +168,27 @@ const Purchase = () => {
                 placeholder="Enter your address"
                 className="input input-bordered input-primary w-full bg-white"
               />
-              <div className="flex flex-nowrap justify-center items-end">
-                <div className="mt-3 text-black md:absolute bottom-10">
-                  <p>Choose Quantity</p>
-                  <div className="w-24 flex flex-nowrap flex-1 items-center mt-5">
-                    <button
-                      className="btn btn-square"
-                      onClick={increaseQuantity}
-                    >
-                      +
-                    </button>
-                    <p className="text-center px-2 text-xl">{quantity}</p>
-                    <button
-                      className="btn btn-square"
-                      onClick={decreaseQuantity}
-                      disabled={quantity == 0}
-                    >
-                      -
-                    </button>
-                  </div>
-                </div>
-                <p className="text-black text-md my-3">Total: {totalPrice}$</p>
-              </div>
               <button className="btn btn-primary w-[100%] ">Submit</button>
             </form>
+            <div className="flex flex-nowrap justify-between items-end">
+              <div className="mt-3 text-black">
+                <p>Choose Quantity</p>
+                <div className="w-24 flex flex-nowrap flex-1 items-center mt-5">
+                  <button className="btn btn-square" onClick={increaseQuantity}>
+                    +
+                  </button>
+                  <p className="text-center px-2 text-xl">{quantity}</p>
+                  <button
+                    className="btn btn-square"
+                    onClick={decreaseQuantity}
+                    disabled={quantity == 0}
+                  >
+                    -
+                  </button>
+                </div>
+              </div>
+              <p className="text-black text-md my-3">Total: {totalPrice}$</p>
+            </div>
           </div>
         </div>
       </div>
