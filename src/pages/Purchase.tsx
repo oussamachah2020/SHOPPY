@@ -6,7 +6,15 @@ import { db } from "../firebase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useProductsStore from "../store/productsStore";
-import { ref as databaseRef, push, set } from "firebase/database";
+import {
+  ref as databaseRef,
+  increment,
+  push,
+  set,
+  update,
+} from "firebase/database";
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
 
 const Purchase = () => {
   const [quantity, setQuantity] = useState<number>(1);
@@ -18,14 +26,29 @@ const Purchase = () => {
     try {
       const dbRef = databaseRef(db, "purchase/");
 
+      const updates = {
+        ordersCounter: increment(1),
+      };
+
       if (dbRef.key) {
         const newPurchaseRef = push(dbRef);
 
         set(newPurchaseRef, {
-          userData: values,
-          product: { ...selectedProduct, quantity: quantity },
+          orderId: uuidv4(),
+          title: selectedProduct.title,
+          category: selectedProduct.category,
+          description: selectedProduct.description,
+          imageURL: selectedProduct.imageURL,
+          price: totalPrice,
+          quantity: quantity,
+          name: values.name,
+          address: values.address,
+          phone: values.phone,
+          city: values.city,
+          ordered_at: moment().calendar(),
         })
           .then(() => {
+            update(dbRef, updates);
             toast.success("Product purchase successfully");
             navigate("/");
           })
@@ -65,17 +88,6 @@ const Purchase = () => {
     }
   }, [quantity, selectedProduct?.price]);
 
-  const fullStars = Math.floor(selectedProduct?.rating.rate || 0);
-
-  // Determine if there is a half star (between 0.25 and 0.75)
-  const hasHalfStar = selectedProduct?.rating.rate
-    ? selectedProduct?.rating.rate - fullStars >= 0.25 &&
-      selectedProduct?.rating.rate - fullStars <= 0.75
-    : 0;
-
-  // Determine the number of empty stars
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
   return (
     <div className="w-full py-20 md:py-10 px-2 md:px-24">
       <h2 className="mb-10 text-xl md:text-3xl text-black">
@@ -83,7 +95,7 @@ const Purchase = () => {
       </h2>
       <div className="shadow-xl md:p-10 rounded-lg flex flex-wrap justify-center md:flex-nowrap md:justify-between items-center relative">
         <img
-          src={selectedProduct?.image}
+          src={selectedProduct?.imageURL}
           alt={selectedProduct?.title}
           className="mr-10 w-[200px] md:w-[300px]"
         />
@@ -92,34 +104,11 @@ const Purchase = () => {
             <h2 className="card-title text-sm w-[100%] md:text-xl text-black">
               {selectedProduct?.title}
             </h2>
-            <p className="text-black font-semibold w-[100%] md:w-[80%] text-sm md:text-xl leading-8 mt-5">
+            <p className="text-black font-semibold w-[100%] md:w-[100%] text-sm md:text-xl leading-8 mt-5">
               {selectedProduct?.description}
             </p>
-            <div>
-              <div className="rating mt-2">
-                {[...Array(fullStars)].map((_, index) => (
-                  <input
-                    key={index}
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                    checked
-                  />
-                ))}
-                {hasHalfStar && <i className="fas fa-star-half-alt"></i>}
-                {[...Array(emptyStars)].map((_, index) => (
-                  <input
-                    key={index}
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                    checked
-                  />
-                ))}
-              </div>
-            </div>
           </div>
-          <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[100%] md:w-[150%]">
+          <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[50%]">
             <h3 className="w-full text-black mb-5">
               To buy please enter your information
             </h3>

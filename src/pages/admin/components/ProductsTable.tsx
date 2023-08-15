@@ -4,20 +4,44 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { fetchedProduct } from "../../../types/types";
 import { IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-// import { ref as databaseRef, remove } from "firebase/database";
-// import { db } from "../../../firebase";
+import { ref as databaseRef, onValue, remove } from "firebase/database";
+import { auth, db } from "../../../firebase";
+import toast from "react-hot-toast";
 
-// const deleteProduct = () => {
-//   const dbRef = databaseRef(db, "products/");
+const deleteProduct = async (productId: string) => {
+  const user = auth.currentUser;
+  if (!user) {
+    console.error("User not authenticated.");
+    return;
+  }
 
-//   remove(dbRef)
-//     .then(() => {
-//       console.log("Data deleted successfully");
-//     })
-//     .catch((error) => {
-//       console.error("Error deleting data:", error);
-//     });
-// };
+  const itemsRef = databaseRef(db, "products/" + user.uid);
+
+  // Get the data matching the query
+  onValue(itemsRef, (snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+      const childData = childSnapshot.val();
+      if (childData.id === productId) {
+        const itemKey = childSnapshot.key;
+        if (!itemKey) {
+          console.error("Item key not found.");
+          return;
+        }
+        const itemRef = databaseRef(db, "products/" + user.uid + "/" + itemKey);
+
+        remove(itemRef)
+          .then(() => {
+            toast.success("Product deleted successfully");
+            // You can use toast or other notification mechanisms here
+          })
+          .catch((err) => {
+            console.error("Error deleting product:", err);
+            // Handle error and show an appropriate message to the user
+          });
+      }
+    });
+  });
+};
 
 const columns: GridColDef[] = [
   {
@@ -58,10 +82,10 @@ const columns: GridColDef[] = [
     flex: 1,
   },
   {
-    field: "", // Replace with the actual field name for the ID
+    field: "id",
     headerName: "Action",
-    renderCell: () => (
-      <IconButton>
+    renderCell: (params) => (
+      <IconButton onClick={() => deleteProduct(params.value)}>
         <DeleteIcon sx={{ color: "red" }} />
       </IconButton>
     ),
@@ -88,6 +112,7 @@ export default function ProductsTable({ rows }: { rows: fetchedProduct[] }) {
         pageSizeOptions={[5, 10]}
         checkboxSelection
         disableRowSelectionOnClick
+        loading={rows.length === 0}
       />
     </Box>
   );

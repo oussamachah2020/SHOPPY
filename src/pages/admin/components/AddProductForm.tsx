@@ -82,7 +82,19 @@ function AddProductForm({
       return;
     }
 
-    const imageRef = ref(storage, `productsImages/${selectedImage?.name}`);
+    if (selectedImage.size < 10240 || selectedImage.size > 81920) {
+      toast.error("Image is too large");
+      return;
+    }
+
+    if (
+      !["image/jpeg", "image/png", "image/webp"].includes(selectedImage.type)
+    ) {
+      toast.error("Invalid image type. Only JPEG and PNG formats are allowed.");
+      return;
+    }
+
+    const imageRef = ref(storage, `productsImages/${selectedImage.name}`);
 
     const uploadTask = uploadBytesResumable(imageRef, selectedImage);
 
@@ -91,8 +103,8 @@ function AddProductForm({
       (snapshot) => {
         const progressValue =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(`Upload is ${progress}% done.`);
         setProgress(progressValue);
+        toast.loading("Uploading...");
       },
       (error) => {
         console.error("Error uploading the file:", error);

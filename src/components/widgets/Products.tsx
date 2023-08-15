@@ -1,39 +1,41 @@
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-// import { db } from "../../firebase";
-// import toast from "react-hot-toast";
-// import {
-//   collection,
-//   addDoc,
-//   query,
-//   where,
-//   onSnapshot,
-// } from "firebase/firestore";
-// import useAuthStore from "../../store/authStore";
 import { ProductType } from "../../types/types";
-// import { productsStore } from "../../store/productsStore";
 import { useNavigate } from "react-router-dom";
 import useProductsStore from "../../store/productsStore";
+import { get, ref } from "firebase/database";
+import { auth, db } from "../../firebase";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { setSelectedProduct } = useProductsStore();
+  const user = auth.currentUser;
   const navigate = useNavigate();
 
   async function fetchProducts() {
     setLoading(true);
 
-    await fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((json) => {
+    const dbRef = ref(db, `products/${user?.uid}`);
+
+    await get(dbRef)
+      .then((snapshot) => {
+        if (!snapshot.exists()) {
+          return;
+        }
+
+        const products: ProductType[] = Object.values(snapshot.val());
+        setProductsData(products);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
         setLoading(false);
-        setProductsData(json);
       });
   }
 
   useEffect(() => {
     fetchProducts();
+    console.log(productsData);
   }, []);
 
   const handleProductSelection = (product: ProductType) => {
@@ -57,13 +59,15 @@ const Products = () => {
             >
               <figure>
                 <img
-                  src={product.image}
+                  src={product.imageURL}
                   alt="Shoes"
-                  className="w-full h-[200px] object-contain"
+                  className="w-[200px] h-[200px] object-contain"
+                  loading="lazy"
                 />
               </figure>
               <div className="card-body">
                 <h2 className="card-title text-black">{product.title}</h2>
+                <p className="text-black text-lg">{product.description}</p>
                 <div className="card-actions flex justify-center items-center relative top-5">
                   <p className="text-black text-xl">{product.price}$</p>
                   <button

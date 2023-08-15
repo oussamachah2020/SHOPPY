@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import LineChart from "./components/Charts";
 import { auth, db } from "../../firebase";
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Modal } from "@mui/material";
 import AddProductForm from "./components/AddProductForm";
 import ProductsTable from "./components/ProductsTable";
-import { ref as databaseRef, get } from "firebase/database";
+import { ref as databaseRef, off, onValue } from "firebase/database";
 import { fetchedProduct } from "../../types/types";
 
 const StoreOwnerDashboard = () => {
@@ -14,9 +14,7 @@ const StoreOwnerDashboard = () => {
   const user = auth.currentUser;
 
   const [open, setOpen] = React.useState(false);
-  const [adminProducts, setAdminProducts] = React.useState<fetchedProduct[]>(
-    []
-  );
+  const [adminProducts, setAdminProducts] = useState<fetchedProduct[]>([]);
 
   const [orders, setOrders] = React.useState<unknown[]>([]);
 
@@ -31,43 +29,44 @@ const StoreOwnerDashboard = () => {
     });
   }, [navigate]);
 
-  const fetchAdminProducts = async () => {
+  useEffect(() => {
     const dbRef = databaseRef(db, "products/" + user?.uid);
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!snapshot.exists()) {
+        return;
+      }
 
-    await get(dbRef)
-      .then((snapshot) => {
-        const data = snapshot.val();
-        if (!snapshot.exists()) {
-          setAdminProducts([]);
-        }
+      setAdminProducts(Object.values(data));
+    });
 
-        setAdminProducts(Object.values(data));
-      })
-      .catch((err) => console.error(err));
-  };
+    return () => {
+      off(dbRef);
+    };
+  }, [user?.uid]);
 
-  const fetchOrders = async () => {
+  useEffect(() => {
     const dbRef = databaseRef(db, "purchase/");
+    onValue(dbRef, (snapshot) => {
+      if (!snapshot.exists()) {
+        return;
+      }
 
-    await get(dbRef)
-      .then((snapshot) => {
-        const data = snapshot.val();
-        if (!snapshot.exists()) {
-          setOrders([]);
-        }
+      const data = snapshot.val();
+      const ordersArray = Object.values(data);
+      const filteredData = ordersArray.filter(
+        (item: unknown) => typeof item === "object"
+      );
 
-        setOrders(Object.values(data));
-      })
-      .catch((err) => console.error(err));
-  };
+      setOrders(filteredData);
 
-  useEffect(() => {
-    fetchAdminProducts();
-  }, [adminProducts]);
+      console.log(orders);
+    });
 
-  useEffect(() => {
-    fetchOrders();
-  }, [orders]);
+    return () => {
+      off(dbRef);
+    };
+  }, []);
 
   return (
     <React.Fragment>
@@ -79,7 +78,12 @@ const StoreOwnerDashboard = () => {
               <h2 className="card-title">ORDERS</h2>
               <p>You have {orders.length} orders</p>
               <div className="card-actions justify-end">
-                <button className="btn btn-primary">Check All</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate("/orders")}
+                >
+                  Check All
+                </button>
               </div>
             </div>
           </div>

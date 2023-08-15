@@ -14,12 +14,9 @@ export interface ProductType {
   title: string;
   description: string;
   price: number;
-  image: string;
+  pieces: number;
+  imageURL: string;
   category: string;
-  rating: {
-    count: number;
-    rate: number;
-  };
 }
 
 export interface PurchaseType {
@@ -30,6 +27,7 @@ export interface PurchaseType {
 }
 
 export interface fetchedProduct {
+  key: string;
   id: string;
   title: string;
   description: string;
@@ -46,4 +44,22 @@ export interface adminProduct {
   imageURL: string;
   pieces: string;
   price: string;
+}
+
+export interface ordersType {
+  key: string;
+  product: {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    imageURL: string;
+    category: string;
+  };
+  userData: {
+    address: string;
+    city: string;
+    name: string;
+    phone: string;
+  };
 }

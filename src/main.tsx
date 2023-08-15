@@ -12,6 +12,7 @@ import i18next from "i18next";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import AuthModal from "./pages/admin/AuthModal";
 import StoreOwnerDashboard from "./pages/admin/StoreOwnerDashboard";
+import Orders from "./pages/admin/Orders";
 
 i18next.use(initReactI18next).init({
   resources: {
@@ -42,10 +43,10 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <StoreOwnerDashboard />,
   },
-  // {
-  //   path: "/admin",
-  //   element: <StoreOwnerDashboard />,
-  // },
+  {
+    path: "/orders",
+    element: <Orders />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

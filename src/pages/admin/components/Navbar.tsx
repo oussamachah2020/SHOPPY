@@ -2,15 +2,52 @@ import { Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { useEffect, useState } from "react";
+import { limitToLast, off, onValue, query, ref } from "firebase/database";
+import { ordersType } from "../../../types/types";
 
 const Navbar = () => {
+  const [ordersCounter, setOrdersCounter] = useState<number | undefined>();
+  const [lastOrder, setLastOrder] = useState<ordersType>();
+
   const navigate = useNavigate();
   const logout = () => {
     signOut(auth).then(() => {
       navigate("/sign-in");
     });
   };
+
+  useEffect(() => {
+    const dbRef = ref(db, "purchase/");
+
+    const lastOrderRef = query(dbRef, limitToLast(2));
+
+    onValue(lastOrderRef, (snapshot) => {
+      const data = snapshot.val();
+      const order = { ...data };
+      delete order.ordersCounter;
+
+      setLastOrder(Object.values(order));
+    });
+
+    return () => {
+      off(dbRef);
+    };
+  }, []);
+
+  useEffect(() => {
+    const ordersCounterRef = ref(db, "purchase/");
+
+    onValue(ordersCounterRef, (snapshot) => {
+      const count = snapshot.val().ordersCounter;
+      setOrdersCounter(count);
+    });
+
+    return () => {
+      off(ordersCounterRef);
+    };
+  }, [ordersCounter]);
 
   return (
     <div>
@@ -51,7 +88,7 @@ const Navbar = () => {
             <label tabIndex={0} className="btn btn-ghost text-white btn-circle">
               <button className="btn btn-ghost btn-circle text-white">
                 <div className="indicator">
-                  <Badge badgeContent={4} color="error">
+                  <Badge badgeContent={ordersCounter} color="error">
                     <NotificationsIcon sx={{ color: "#fff" }} />
                   </Badge>
                 </div>
@@ -61,7 +98,16 @@ const Navbar = () => {
               tabIndex={1}
               className="menu menu-md dropdown-content mt-3 z-[1] text-white p-4 shadow bg-[#000000d5] rounded-box w-64"
             >
-              <li>You have a new order from name....</li>
+              <li
+                className={`${
+                  ordersCounter && ordersCounter > 0
+                } ? bg-[rgba(255,255,255,0.2)] : bg-transparent px-2 py-3`}
+              >
+                <div className="flex flex-nowrap justify-center items-center">
+                  <img src={lastOrder?.imageURL} alt={lastOrder?.title} />
+                  <h2>{lastOrder?.title}</h2>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
