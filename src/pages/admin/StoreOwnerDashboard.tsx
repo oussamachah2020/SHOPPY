@@ -7,16 +7,18 @@ import { Box, Modal } from "@mui/material";
 import AddProductForm from "./components/AddProductForm";
 import ProductsTable from "./components/ProductsTable";
 import { ref as databaseRef, off, onValue } from "firebase/database";
-import { fetchedProduct } from "../../types/types";
+import { fetchedProduct, ordersType } from "../../types/types";
+import moment from "moment";
+import useAuthStore from "../../store/authStore";
 
 const StoreOwnerDashboard = () => {
   const navigate = useNavigate();
-  const user = auth.currentUser;
 
   const [open, setOpen] = React.useState(false);
   const [adminProducts, setAdminProducts] = useState<fetchedProduct[]>([]);
+  const [orders, setOrders] = React.useState<ordersType[]>([]);
 
-  const [orders, setOrders] = React.useState<unknown[]>([]);
+  const { user, setUser } = useAuthStore();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -25,19 +27,23 @@ const StoreOwnerDashboard = () => {
     auth.onAuthStateChanged((user) => {
       if (!user) {
         navigate("/sign-up");
+      } else {
+        setUser(user);
       }
     });
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     const dbRef = databaseRef(db, "products/" + user?.uid);
     onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
       if (!snapshot.exists()) {
         return;
       }
 
-      setAdminProducts(Object.values(data));
+      const data = snapshot.val();
+      if (data) {
+        setAdminProducts(Object.values(data));
+      }
     });
 
     return () => {
@@ -47,20 +53,23 @@ const StoreOwnerDashboard = () => {
 
   useEffect(() => {
     const dbRef = databaseRef(db, "purchase/");
+
     onValue(dbRef, (snapshot) => {
-      if (!snapshot.exists()) {
-        return;
-      }
+      snapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
 
-      const data = snapshot.val();
-      const ordersArray = Object.values(data);
-      const filteredData = ordersArray.filter(
-        (item: unknown) => typeof item === "object"
-      );
+        if (typeof data === "object") {
+          orders.push(data);
+        }
+      });
 
-      setOrders(filteredData);
+      orders.sort((a, b) => {
+        const orderedAtAUnix = moment(a.ordered_at).format();
+        const orderedAtBUnix = moment(b.ordered_at).format();
+        return moment(orderedAtBUnix).diff(orderedAtAUnix);
+      });
 
-      console.log(orders);
+      setOrders(orders);
     });
 
     return () => {

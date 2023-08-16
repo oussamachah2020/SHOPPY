@@ -13,6 +13,9 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import AuthModal from "./pages/admin/AuthModal";
 import StoreOwnerDashboard from "./pages/admin/StoreOwnerDashboard";
 import Orders from "./pages/admin/Orders";
+import OrderDetails from "./pages/admin/OrderDetails";
+// import SignUp from "./pages/auth/SignUp";
+// import SignIn from "./pages/auth/SignIn";
 
 i18next.use(initReactI18next).init({
   resources: {
@@ -36,7 +39,7 @@ const router = createBrowserRouter([
     element: <Purchase />,
   },
   {
-    path: "/sign-in",
+    path: "/admin-sign-in",
     element: <AuthModal />,
   },
   {
@@ -47,6 +50,18 @@ const router = createBrowserRouter([
     path: "/orders",
     element: <Orders />,
   },
+  {
+    path: "/order/:orderKey",
+    element: <OrderDetails />,
+  },
+  // {
+  //   path: "sign-up",
+  //   element: <SignUp />,
+  // },
+  // {
+  //   path: "sign-in",
+  //   element: <SignIn />,
+  // },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -47,19 +47,18 @@ export interface adminProduct {
 }
 
 export interface ordersType {
-  key: string;
-  product: {
-    id: number;
-    title: string;
-    description: string;
-    price: number;
-    imageURL: string;
-    category: string;
-  };
-  userData: {
-    address: string;
-    city: string;
-    name: string;
-    phone: string;
-  };
+  orderId: string;
+  title: string;
+  description: string;
+  price: number;
+  imageURL: string;
+  category: string;
+  ordered_at: string;
+  address: string;
+  city: string;
+  name: string;
+  phone: string;
+  seen: boolean;
+  quantity: number;
+  delivered: boolean;
 }

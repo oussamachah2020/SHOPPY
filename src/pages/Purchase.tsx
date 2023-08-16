@@ -45,7 +45,9 @@ const Purchase = () => {
           address: values.address,
           phone: values.phone,
           city: values.city,
-          ordered_at: moment().calendar(),
+          seen: false,
+          delivered: false,
+          ordered_at: moment().format(),
         })
           .then(() => {
             update(dbRef, updates);

@@ -104,7 +104,9 @@ function AddProductForm({
         const progressValue =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setProgress(progressValue);
-        toast.loading("Uploading...");
+        if (progressValue < 100) {
+          toast.loading("Uploading...");
+        }
       },
       (error) => {
         console.error("Error uploading the file:", error);

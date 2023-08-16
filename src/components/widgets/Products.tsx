@@ -4,45 +4,39 @@ import { ProductType } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import useProductsStore from "../../store/productsStore";
 import { get, ref } from "firebase/database";
-import { auth, db } from "../../firebase";
+import { db } from "../../firebase";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { setSelectedProduct } = useProductsStore();
-  const user = auth.currentUser;
   const navigate = useNavigate();
 
   async function fetchProducts() {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const dbRef = ref(db, `products/${user?.uid}`);
+      const dbRef = ref(db, "products/rwvOmZJhwdfdfDrvMNPE7BKqwEb2");
+      const data = await get(dbRef);
 
-    await get(dbRef)
-      .then((snapshot) => {
-        if (!snapshot.exists()) {
-          return;
-        }
-
-        const products: ProductType[] = Object.values(snapshot.val());
-        setProductsData(products);
-      })
-      .catch((err) => console.error(err))
-      .finally(() => {
-        setLoading(false);
-      });
+      if (data.exists()) {
+        setProductsData(Object.values(data.val()));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }
-
-  useEffect(() => {
-    fetchProducts();
-    console.log(productsData);
-  }, []);
 
   const handleProductSelection = (product: ProductType) => {
     setSelectedProduct(product);
     navigate("/purchases");
   };
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
   return (
     <div className="py-24 md:p-24">
       <h2 className="mb-10 text-3xl text-black">Products</h2>

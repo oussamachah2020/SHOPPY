@@ -4,10 +4,13 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ref as databaseRef, off, onValue } from "firebase/database";
+import { ref as databaseRef, off, onValue, remove } from "firebase/database";
 import { db } from "../../firebase";
 import { ordersType } from "../../types/types";
 import DeleteIcon from "@mui/icons-material/Delete";
+import toast from "react-hot-toast";
+import LaunchIcon from "@mui/icons-material/Launch";
+import { useNavigate } from "react-router-dom";
 
 const columns: GridColDef[] = [
   {
@@ -61,19 +64,56 @@ const columns: GridColDef[] = [
 
 export default function Orders() {
   const [rows, setRows] = useState<ordersType[]>([]);
-  const [keys, setKeys] = useState<string[]>([]);
+  const navigate = useNavigate();
 
-  // const deleteOrder = async (orderID: string) => {
-  //   const dataRefToDelete = databaseRef(db, "purchase/");
+  const deleteOrder = async (orderId: string) => {
+    const itemsRef = databaseRef(db, "purchase/");
 
-  //   remove(dataRefToDelete)
-  //     .then(() => {
-  //       console.log("Data deleted successfully");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error deleting data:", error);
-  //     });
-  // };
+    // Get the data matching the query
+    onValue(itemsRef, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childData = childSnapshot.val();
+        if (childData.orderId === orderId) {
+          const itemKey = childSnapshot.key;
+
+          if (!itemKey) {
+            console.error("Item key not found.");
+            return;
+          }
+          const itemRef = databaseRef(db, "purchase/" + itemKey);
+
+          remove(itemRef)
+            .then(() => {
+              toast.success("Order deleted successfully");
+            })
+            .catch((err) => {
+              console.error("Error deleting product:", err);
+            });
+        }
+      });
+    });
+  };
+
+  const getOrderKey = (orderId: string) => {
+    const itemsRef = databaseRef(db, "purchase/");
+
+    // Get the data matching the query
+    onValue(itemsRef, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childData = childSnapshot.val();
+        if (childData.orderId === orderId) {
+          const itemKey = childSnapshot.key;
+
+          if (!itemKey) {
+            console.error("Item key not found.");
+            return;
+          }
+
+          navigate(`/order/${itemKey}`);
+        }
+      });
+    });
+  };
 
   useEffect(() => {
     const dbRef = databaseRef(db, "purchase/");
@@ -88,7 +128,6 @@ export default function Orders() {
         (item: unknown) => typeof item === "object"
       );
 
-      setKeys(Object.keys(data));
       setRows(filteredData);
     });
 
@@ -108,18 +147,39 @@ export default function Orders() {
         columns={[
           ...columns,
           {
+            field: "delivered",
+            headerName: "Order State",
+            renderCell: (params) => (
+              <div>
+                <p
+                  className={
+                    params.value
+                      ? "text-green-500 font-semibold"
+                      : " text-red-500 font-semibold"
+                  }
+                >
+                  {params.value ? "YES" : "NO"}
+                </p>
+              </div>
+            ),
+          },
+          {
             field: "orderId",
-            headerName: "Delete Order",
-            renderCell: () => (
-              <IconButton
-                onClick={() => {
-                  keys.map((key) => {
-                    console.log(key);
-                  });
-                }}
-              >
-                <DeleteIcon sx={{ color: "red" }} />
-              </IconButton>
+            headerName: "Actions",
+            renderCell: (params) => (
+              <Box>
+                <IconButton
+                  onClick={() => {
+                    deleteOrder(params.value);
+                  }}
+                >
+                  <DeleteIcon sx={{ color: "red" }} />
+                </IconButton>
+
+                <IconButton onClick={() => getOrderKey(params.value)}>
+                  <LaunchIcon />
+                </IconButton>
+              </Box>
             ),
           },
         ]}

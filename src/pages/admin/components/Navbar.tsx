@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../../firebase";
 import { useEffect, useState } from "react";
-import { limitToLast, off, onValue, query, ref } from "firebase/database";
+import { off, onValue, ref, update } from "firebase/database";
 import { ordersType } from "../../../types/types";
+import moment from "moment";
 
 const Navbar = () => {
-  const [ordersCounter, setOrdersCounter] = useState<number | undefined>();
-  const [lastOrder, setLastOrder] = useState<ordersType>();
+  const [ordersCounter, setOrdersCounter] = useState<number>(0);
+  const [newOrders, setNewOrders] = useState<ordersType[]>([]);
 
   const navigate = useNavigate();
   const logout = () => {
@@ -18,17 +20,53 @@ const Navbar = () => {
     });
   };
 
+  // const checkOrders = () => {
+
+  // };
+
+  const updateOrderAndCounterStates = () => {
+    const dbRef = ref(db, "purchase/");
+
+    onValue(dbRef, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childItem = childSnapshot.val();
+        if (childItem.seen == false) {
+          const childRef = ref(db, "purchase/" + childSnapshot.key);
+
+          update(childRef, {
+            seen: true,
+          });
+        }
+      });
+    });
+
+    const counterReset = {
+      ordersCounter: 0,
+    };
+
+    update(dbRef, counterReset);
+
+    navigate("/orders");
+  };
+
   useEffect(() => {
     const dbRef = ref(db, "purchase/");
 
-    const lastOrderRef = query(dbRef, limitToLast(2));
+    onValue(dbRef, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const orderData = childSnapshot.val();
 
-    onValue(lastOrderRef, (snapshot) => {
-      const data = snapshot.val();
-      const order = { ...data };
-      delete order.ordersCounter;
+        if (typeof orderData === "object" && orderData.seen === false) {
+          newOrders.push(orderData);
+        }
+      });
+      newOrders.sort((a, b) => {
+        const orderedAtAUnix = moment(a.ordered_at).format();
+        const orderedAtBUnix = moment(b.ordered_at).format();
+        return moment(orderedAtBUnix).diff(orderedAtAUnix);
+      });
 
-      setLastOrder(Object.values(order));
+      setNewOrders(newOrders);
     });
 
     return () => {
@@ -95,19 +133,42 @@ const Navbar = () => {
               </button>
             </label>
             <ul
-              tabIndex={1}
-              className="menu menu-md dropdown-content mt-3 z-[1] text-white p-4 shadow bg-[#000000d5] rounded-box w-64"
+              tabIndex={0}
+              className="menu menu-md dropdown-content mt-3 z-[1] text-white p-4 shadow bg-[#000000d5] rounded-box w-96 overflow-auto"
             >
-              <li
-                className={`${
-                  ordersCounter && ordersCounter > 0
-                } ? bg-[rgba(255,255,255,0.2)] : bg-transparent px-2 py-3`}
-              >
-                <div className="flex flex-nowrap justify-center items-center">
-                  <img src={lastOrder?.imageURL} alt={lastOrder?.title} />
-                  <h2>{lastOrder?.title}</h2>
-                </div>
-              </li>
+              {ordersCounter > 0 ? (
+                newOrders.map((order) => (
+                  <li key={order.orderId} onClick={updateOrderAndCounterStates}>
+                    <div
+                      className={`${
+                        ordersCounter > 0 && order.seen === false
+                      } ? bg-[rgba(255,255,255,0.19)] : bg-transparent px-2 py-3 flex flex-wrap justify-between items-center w-[100%] mt-2 overflow-auto`}
+                    >
+                      <div className="flex flex-nowrap justify-between gap-3 items-center w-[100%]">
+                        <img
+                          src={order?.imageURL}
+                          alt={order?.title}
+                          className="w-[80px] h-[80px]"
+                        />
+                        <div>
+                          <p className="w-[100%] text-md text-red-400">
+                            New Order
+                          </p>
+                          <p className="w-[100%] text-md">{order?.title}</p>
+                        </div>
+                      </div>
+                      <p>
+                        Client:{" "}
+                        <span className="font-bold text-red-400">
+                          {order.name}
+                        </span>
+                      </p>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <p>No order for the moment</p>
+              )}
             </ul>
           </div>
         </div>
