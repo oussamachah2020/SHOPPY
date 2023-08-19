@@ -19,6 +19,7 @@ import moment from "moment";
 const Purchase = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>();
+  const [productImage, setProductImage] = useState<number>(0);
   const { selectedProduct } = useProductsStore();
   const navigate = useNavigate();
 
@@ -96,11 +97,28 @@ const Purchase = () => {
         Purchased Products
       </h2>
       <div className="shadow-xl md:p-10 rounded-lg flex flex-wrap justify-center md:flex-nowrap md:justify-between items-center relative">
-        <img
-          src={selectedProduct?.imageURL}
-          alt={selectedProduct?.title}
-          className="mr-10 w-[200px] md:w-[300px]"
-        />
+        <div className="flex justify-center items-center flex-col ml-5">
+          <img
+            src={selectedProduct?.imageURL[productImage]}
+            alt={selectedProduct?.title}
+            className="mr-10 w-[200px] md:w-[300px]"
+          />
+          <div className="flex justify-center items-center">
+            {selectedProduct.imageURL.map(
+              (images: string | undefined, index: number) => (
+                <button
+                  key={index}
+                  className={`${
+                    productImage === index ? "border-2 border-gray-500" : ""
+                  }  mr-5 mt-10 border border-gray-400`}
+                  onClick={() => setProductImage(index)}
+                >
+                  <img className="w-[80px] p-1" src={images} alt="image" />
+                </button>
+              )
+            )}
+          </div>
+        </div>
         <div className="flex flex-col-reverse justify-start items-center md:flex-row">
           <div className="card-body">
             <h2 className="card-title text-sm w-[100%] md:text-xl text-black">
@@ -110,7 +128,7 @@ const Purchase = () => {
               {selectedProduct?.description}
             </p>
           </div>
-          <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[50%]">
+          <div className="bg-white shadow-lg mr-10 p-10 rounded-xl w-[100%] md:w-[50%]">
             <h3 className="w-full text-black mb-5">
               To buy please enter your information
             </h3>

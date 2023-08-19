@@ -26,7 +26,7 @@ const PromoBlock = () => {
             intérieure, etc.
           </p>
           <CountDown />
-          <button className="btn bg-[#783edb] text-white leading-5 outline-none border-none px-3">
+          <button className="btn btn-primary bg-[#783edb] text-white leading-5 outline-none border-none px-3">
             Dépêchez-vous et découvrez nos meilleures offres
           </button>
         </div>

@@ -1,5 +1,10 @@
 import { Box, IconButton, Typography } from "@mui/material";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  UploadTaskSnapshot,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { ref as databaseRef, push, set } from "firebase/database";
 import { useFormik } from "formik";
 import { db, storage } from "../../../firebase";
@@ -8,6 +13,8 @@ import toast from "react-hot-toast";
 import CloseIcon from "@mui/icons-material/Close";
 import { adminProduct } from "../../../types/types";
 import { v4 as uuidv4 } from "uuid";
+import { Subscribe } from "@firebase/util";
+import { Unsubscribe } from "firebase/auth";
 
 const style = {
   position: "absolute" as const,
@@ -27,13 +34,13 @@ function AddProductForm({
   userId: string | undefined;
   closeModal: () => void;
 }) {
-  const [selectedImage, setSelectedImage] = useState<File | null>();
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setSelectedImage(e.target.files[0]);
+      setSelectedImages([...selectedImages, ...e.target.files]);
     }
   };
 
@@ -44,7 +51,7 @@ function AddProductForm({
       title: "",
       description: "",
       category: "",
-      imageURL: "",
+      imageURL: [],
       price: "",
       pieces: "",
     },
@@ -73,57 +80,60 @@ function AddProductForm({
   };
 
   function cancelUpload() {
-    setSelectedImage(null);
+    setSelectedImages([]);
     setProgress(0);
   }
 
   useEffect(() => {
-    if (selectedImage == null) {
+    if (selectedImages.length === 0) {
       return;
     }
 
-    if (selectedImage.size < 10240 || selectedImage.size > 81920) {
-      toast.error("Image is too large");
-      return;
-    }
+    let unsubscribe: Unsubscribe | Subscribe<UploadTaskSnapshot>;
 
-    if (
-      !["image/jpeg", "image/png", "image/webp"].includes(selectedImage.type)
-    ) {
-      toast.error("Invalid image type. Only JPEG and PNG formats are allowed.");
-      return;
-    }
-
-    const imageRef = ref(storage, `productsImages/${selectedImage.name}`);
-
-    const uploadTask = uploadBytesResumable(imageRef, selectedImage);
-
-    const unsubscribe = uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progressValue =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progressValue);
-        if (progressValue < 100) {
-          toast.loading("Uploading...");
-        }
-      },
-      (error) => {
-        console.error("Error uploading the file:", error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          values.imageURL = downloadURL;
-          console.log(downloadURL);
-          toast.success("Image Uploaded successfully");
-        });
+    selectedImages.forEach((image) => {
+      if (image.size > 1024 * 1024) {
+        toast.error("Image is too large");
+        return;
       }
-    );
+      if (!["image/jpeg", "image/png", "image/webp"].includes(image.type)) {
+        toast.error(
+          "Invalid image type. Only JPEG and PNG formats are allowed."
+        );
+        return;
+      }
+      const imageRef = ref(storage, `productsImages/${image.name}`);
+
+      const uploadTask = uploadBytesResumable(imageRef, image);
+
+      unsubscribe = uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progressValue =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progressValue);
+          if (progressValue !== 100) {
+            toast.loading("Uploading...");
+          } else {
+            toast.dismiss();
+            toast.success("Upload completed successfully!");
+          }
+        },
+        (error) => {
+          console.error("Error uploading the file:", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            values.imageURL.push(downloadURL);
+          });
+        }
+      );
+    });
 
     return () => {
       unsubscribe();
     };
-  }, [selectedImage, values]);
+  }, [selectedImages, values.imageURL]);
 
   return (
     <Box sx={style}>
@@ -221,9 +231,7 @@ function AddProductForm({
             value={values.category}
             onChange={handleChange}
           >
-            <option disabled selected>
-              Category
-            </option>
+            <option selected>Select Category</option>
             <option>Women</option>
             <option>Men</option>
             <option>Kids</option>
@@ -232,7 +240,7 @@ function AddProductForm({
         <div className="form-group w-full">
           <label className="label w-full relative">
             <span className="label-text text-[#000000a6] text-md font-medium mt-3">
-              {selectedImage != null && progress > 0 ? (
+              {selectedImages.length !== 0 && progress > 0 ? (
                 <div className="flex flex-row justify-around items-center w-full">
                   <p>Uploading</p>
                   <button
@@ -247,7 +255,7 @@ function AddProductForm({
               )}
             </span>
           </label>
-          {selectedImage !== null && progress > 0 ? (
+          {selectedImages.length !== 0 && progress > 0 ? (
             <progress
               className="progress progress-primary w-full"
               value={progress}
@@ -256,6 +264,7 @@ function AddProductForm({
           ) : (
             <input
               onChange={handleFileChange}
+              multiple
               type="file"
               className="file-input file-input-bordered file-input-primary w-full  bg-white"
             />

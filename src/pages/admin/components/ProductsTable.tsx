@@ -65,7 +65,7 @@ const columns: GridColDef[] = [
     flex: 1,
     renderCell: (params) => (
       <img
-        src={params.value}
+        src={params.value[0]}
         alt="Image"
         style={{ maxWidth: "100%", maxHeight: "100%" }}
       />

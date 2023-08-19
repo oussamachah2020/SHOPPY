@@ -26,7 +26,7 @@ const StoreOwnerDashboard = () => {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (!user) {
-        navigate("/sign-up");
+        navigate("/admin-sign-in");
       } else {
         setUser(user);
       }
@@ -88,7 +88,7 @@ const StoreOwnerDashboard = () => {
               <p>You have {orders.length} orders</p>
               <div className="card-actions justify-end">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-primary text-white"
                   onClick={() => navigate("/orders")}
                 >
                   Check All
@@ -102,7 +102,10 @@ const StoreOwnerDashboard = () => {
               <h2 className="card-title">PRODUCTS</h2>
               <p>Your Existing Products: {adminProducts.length}</p>
               <div className="card-actions justify-end mt-5">
-                <button className="btn btn-primary" onClick={handleOpen}>
+                <button
+                  className="btn btn-primary text-white"
+                  onClick={handleOpen}
+                >
                   Add a product
                 </button>
               </div>

@@ -41,7 +41,7 @@ export interface adminProduct {
   title: string;
   description: string;
   category: string;
-  imageURL: string;
+  imageURL: string[];
   pieces: string;
   price: string;
 }

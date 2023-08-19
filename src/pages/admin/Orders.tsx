@@ -10,7 +10,7 @@ import { ordersType } from "../../types/types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import toast from "react-hot-toast";
 import LaunchIcon from "@mui/icons-material/Launch";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const columns: GridColDef[] = [
   {
@@ -138,9 +138,21 @@ export default function Orders() {
 
   return (
     <Box sx={{ height: 400, width: "97%", mx: 3, mt: 5 }}>
-      <Typography sx={{ color: "#000", fontSize: 18, mb: 3 }}>
-        Orders
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <Typography sx={{ color: "#000", fontSize: 18, mb: 3 }}>
+          Orders
+        </Typography>
+        <Link to={"/admin"} className="btn btn-primary text-white">
+          Return to dashboard
+        </Link>
+      </Box>
       <DataGrid
         rows={rows}
         getRowId={(row) => row.orderId}
@@ -158,7 +170,7 @@ export default function Orders() {
                       : " text-red-500 font-semibold"
                   }
                 >
-                  {params.value ? "YES" : "NO"}
+                  {params.value === true ? "Delivered" : "Not Delivered"}
                 </p>
               </div>
             ),

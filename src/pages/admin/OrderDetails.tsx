@@ -1,6 +1,6 @@
-import { get, onValue, ref, update } from "firebase/database";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { get, ref, update } from "firebase/database";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { ordersType } from "../../types/types";
 import moment from "moment";
@@ -9,24 +9,30 @@ const OrderDetails = () => {
   const param = useParams();
   const [order, setOrder] = useState<ordersType>();
 
-  const toggleDeliveryState = () => {
+  const toggleDeliveryState = async () => {
     const orderRef = ref(db, "purchase/" + param.orderKey);
 
-    // onValue(orderRef, (snapshot) => {
-    //   if (!snapshot.exists()) {
-    //     return;
-    //   }
-    // });
+    await get(orderRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const currentDeliveredValue = snapshot.val().delivered || false;
+        const updates = {
+          delivered: !currentDeliveredValue,
+        };
 
-    const updates = {
-      delivered: true,
-    };
-
-    update(orderRef, updates);
+        update(orderRef, updates)
+          .then(() => {
+            console.log("Toggle successful");
+          })
+          .catch((error) => {
+            console.error("Error toggling delivered value:", error);
+          });
+      } else {
+        console.log("Order does not exist.");
+      }
+    });
   };
 
   useEffect(() => {
-    console.log(param.orderKey);
     const orderRef = ref(db, "purchase/" + param.orderKey);
 
     get(orderRef).then((snapshot) => {
@@ -71,11 +77,14 @@ const OrderDetails = () => {
               type="checkbox"
               className="toggle toggle-success"
               onClick={toggleDeliveryState}
+              defaultChecked={order?.delivered}
             />
           </div>
         </div>
       </div>
-      <button className="btn btn-primary">Return to dashboard</button>
+      <Link to={"/orders"} className="btn btn-primary text-white">
+        Return to orders page
+      </Link>
     </div>
   );
 };

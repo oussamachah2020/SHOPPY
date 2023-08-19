@@ -16,7 +16,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const logout = () => {
     signOut(auth).then(() => {
-      navigate("/sign-in");
+      navigate("/admin-sign-in");
     });
   };
 
@@ -110,7 +110,7 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-black rounded-box w-52"
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-black text-white rounded-box w-52"
             >
               <li onClick={logout}>
                 <a>Logout</a>
@@ -154,10 +154,12 @@ const Navbar = () => {
                           <p className="w-[100%] text-md text-red-400">
                             New Order
                           </p>
-                          <p className="w-[100%] text-md">{order?.title}</p>
+                          <p className="w-[100%] text-md text-white">
+                            {order?.title}
+                          </p>
                         </div>
                       </div>
-                      <p>
+                      <p className="text-white">
                         Client:{" "}
                         <span className="font-bold text-red-400">
                           {order.name}

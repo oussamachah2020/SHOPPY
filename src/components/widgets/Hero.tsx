@@ -21,7 +21,9 @@ const Hero = () => {
             {" "}
             {t("subTitle.description")}
           </p>
-          <button className="btn btn-primary">{t("explore.content")}</button>
+          <button className="btn btn-primary text-white">
+            {t("explore.content")}
+          </button>
         </div>
       </div>
     </div>
