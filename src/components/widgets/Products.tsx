@@ -53,9 +53,11 @@ const Products = () => {
 
   return (
     <div className="py-24 px-5 md:p-24">
-      <div className="flex flex-wrap md:flex-nowrap gap-2 justify-between items-start">
-        <h2 className="md:mb-10 text-3xl text-black">Products</h2>
-        <div className="flex flex-row justify-center items-center gap-2">
+      <div className="flex flex-wrap md:flex-nowrap gap-2 justify-center md:justify-between items-center">
+        <h2 className="text-2xl text-center text-black">
+          Best Selling Products
+        </h2>
+        <div className="flex flex-row justify-center items-center gap-2 mt-5">
           <p>Category: </p>
           <select
             className="select select-primary w-full bg-white text-black"
@@ -73,7 +75,7 @@ const Products = () => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-1 justify-center md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 justify-center md:grid-cols-4 md:gap-4">
         {loading ? (
           <div className="flex justify-center items-center w-44">
             <CircularProgress />
@@ -82,13 +84,14 @@ const Products = () => {
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="card card-compact  md:w-96 mt-10 bg-white text-black shadow-xl relative"
+              className="card card-compact w-[100%] mt-10 bg-white text-black shadow-xl relative"
+              onClick={() => navigate("/purchases")}
             >
-              <figure className="mb-52">
+              <figure className="mb-40">
                 <img
                   src={product.imageURL}
                   alt={product.title}
-                  width={"200px"}
+                  width={"300px"}
                   height={"100px"}
                 />
               </figure>
