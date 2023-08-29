@@ -140,7 +140,7 @@ const Purchase = () => {
           </div>
         </div>
         <form
-          className=" flex flex-wrap gap-3 justify-start items-center w-[100%] md:w-[40%]"
+          className=" flex flex-wrap gap-3 justify-start items-center w-[100%] md:w-[40%] p-5 shadow-lg h-[100%] rounded-md"
           onSubmit={handleSubmit}
         >
           <div className="visible border border-gray-200 mt-3 md:hidden"></div>

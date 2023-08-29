@@ -37,6 +37,15 @@ function AddProductForm({
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeStep, setActiveStep] = useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -54,6 +63,7 @@ function AddProductForm({
       imageURL: [],
       price: "",
       pieces: "",
+      coupon: 0,
     },
     onSubmit,
   });
@@ -182,139 +192,176 @@ function AddProductForm({
           <CloseIcon />
         </IconButton>
       </Box>
-      <form onSubmit={handleSubmit} className="w-[100%] mt-5">
-        <div className="form-group">
-          <label className="label">
-            <span className="label-text text-[#000000a6] text-md font-medium">
-              Title
-            </span>
-          </label>
-          <input
-            type="text"
-            placeholder="Title"
-            id="title"
-            name="title"
-            value={values.title}
-            onChange={handleChange}
-            className="input input-bordered input-primary w-full bg-white text-black"
-          />
-        </div>
+      <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+        <form onSubmit={handleSubmit} className=" mt-2">
+          {activeStep === 0 ? (
+            <div className="w-[110%]">
+              <div className="form-group">
+                <label className="label">
+                  <span className="label-text text-[#000000a6] text-md font-medium">
+                    Title
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Title"
+                  id="title"
+                  name="title"
+                  value={values.title}
+                  onChange={handleChange}
+                  className="input input-bordered input-primary w-full bg-white text-black"
+                />
+              </div>
 
-        <div className="form-group">
-          <label className="label">
-            <span className="label-text text-[#000000a6] text-md font-medium mt-3">
-              Description
-            </span>
-          </label>
+              <div className="form-group">
+                <label className="label">
+                  <span className="label-text text-[#000000a6] text-md font-medium mt-3">
+                    Description
+                  </span>
+                </label>
 
-          <textarea
-            id="description"
-            name="description"
-            value={values.description}
-            onChange={handleChange}
-            className="textarea textarea-primary w-full bg-white text-black"
-            placeholder="Description"
-          ></textarea>
-        </div>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={values.description}
+                  onChange={handleChange}
+                  className="textarea textarea-primary w-full bg-white text-black"
+                  placeholder="Description"
+                ></textarea>
+              </div>
 
-        <div className="form-group">
-          <label className="label">
-            <span className="label-text text-[#000000a6] text-md font-medium mt-3">
-              Category
-            </span>
-          </label>
+              <div className="form-group">
+                <label className="label">
+                  <span className="label-text text-[#000000a6] text-md font-medium mt-3">
+                    Category
+                  </span>
+                </label>
 
-          <select
-            className="select select-primary w-full bg-white text-black"
-            id="category"
-            name="category"
-            value={values.category}
-            onChange={handleChange}
-          >
-            <option selected>Select Category</option>
-            <option>Women</option>
-            <option>Men</option>
-            <option>Kids</option>
-          </select>
-        </div>
-        <div className="form-group w-full">
-          <label className="label w-full relative">
-            <span className="label-text text-[#000000a6] text-md font-medium mt-3">
-              {selectedImages.length !== 0 && progress > 0 ? (
-                <div className="flex flex-row justify-around items-center w-full">
-                  <p>Uploading</p>
-                  <button
-                    className=" text-red-500 absolute right-0"
-                    onClick={cancelUpload}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                "Product Image"
-              )}
-            </span>
-          </label>
-          {selectedImages.length !== 0 && progress > 0 ? (
-            <progress
-              className="progress progress-primary w-full"
-              value={progress}
-              max={100}
-            ></progress>
+                <select
+                  className="select select-primary w-full bg-white text-black"
+                  id="category"
+                  name="category"
+                  value={values.category}
+                  onChange={handleChange}
+                >
+                  <option selected>Select Category</option>
+                  <option>Women</option>
+                  <option>Men</option>
+                  <option>Kids</option>
+                </select>
+              </div>
+              <div className="form-group w-full">
+                <label className="label w-full relative">
+                  <span className="label-text text-[#000000a6] text-md font-medium mt-3">
+                    {selectedImages.length !== 0 && progress > 0 ? (
+                      <div className="flex flex-row justify-around items-center w-full">
+                        <p>Uploading</p>
+                        <button
+                          className=" text-red-500 absolute right-0"
+                          onClick={cancelUpload}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      "Product Image"
+                    )}
+                  </span>
+                </label>
+                {selectedImages.length !== 0 && progress > 0 ? (
+                  <progress
+                    className="progress progress-primary w-full"
+                    value={progress}
+                    max={100}
+                  ></progress>
+                ) : (
+                  <input
+                    onChange={handleFileChange}
+                    multiple
+                    type="file"
+                    className="file-input file-input-bordered file-input-primary w-full  bg-white"
+                  />
+                )}
+              </div>
+            </div>
           ) : (
-            <input
-              onChange={handleFileChange}
-              multiple
-              type="file"
-              className="file-input file-input-bordered file-input-primary w-full  bg-white"
-            />
+            <div className="w-[110%]">
+              <div className="form-group mt-3">
+                <label className="label">
+                  <span className="label-text text-[#000000a6] text-md font-medium">
+                    Number of Pieces
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="Number of Pieces"
+                  id="pieces"
+                  name="pieces"
+                  value={values.pieces}
+                  onChange={handleChange}
+                  className="input input-bordered input-primary w-full bg-white text-black"
+                />
+              </div>
+
+              <div className="form-control w-full mt-3">
+                <label className="label">
+                  <span className="label-text text-[#000000a6] text-md font-medium ">
+                    Product Price
+                  </span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="price"
+                    name="price"
+                    value={values.price}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Prix"
+                    className="input input-bordered input-primary bg-white text-black w-full"
+                  />
+                  <span className="bg-purple-600 text-white">DHS</span>
+                </label>
+              </div>
+              <div className="form-control w-full ">
+                <label className="label">
+                  <span className="label-text text-[#000000a6] text-md font-medium ">
+                    add coupon (optional)
+                  </span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="coupon"
+                    name="coupon"
+                    value={values.coupon}
+                    onChange={handleChange}
+                    type="number"
+                    placeholder="example: 30"
+                    className="input input-bordered input-primary bg-white text-black w-full"
+                  />
+                  <span className="bg-purple-600 text-white">%</span>
+                </label>
+              </div>
+            </div>
           )}
-        </div>
-
-        <div className="form-group mt-3">
-          <label className="label">
-            <span className="label-text text-[#000000a6] text-md font-medium">
-              Number of Pieces
-            </span>
-          </label>
-          <input
-            type="number"
-            placeholder="Number of Pieces"
-            id="pieces"
-            name="pieces"
-            value={values.pieces}
-            onChange={handleChange}
-            className="input input-bordered input-primary w-full bg-white text-black"
-          />
-        </div>
-
-        <div className="form-control w-full mt-3">
-          <label className="label">
-            <span className="label-text text-[#000000a6] text-md font-medium ">
-              Product Price
-            </span>
-          </label>
-          <label className="input-group">
-            <input
-              id="price"
-              name="price"
-              value={values.price}
-              onChange={handleChange}
-              type="text"
-              placeholder="Prix"
-              className="input input-bordered input-primary bg-white text-black w-full"
-            />
-            <span className="bg-purple-600 text-white">DHS</span>
-          </label>
-        </div>
-        <button
-          type="submit"
-          className="btn btn-primary w-full mt-5"
-          onClick={addProduct}
-        >
-          ADD
-        </button>
-      </form>
+          <div className="flex justify-between items-center gap-10">
+            <button
+              type="submit"
+              className="btn btn-outline w-[50%] mt-8 text-black"
+              disabled={activeStep == 0}
+              onClick={handleBack}
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary w-[50%] mt-8 text-white"
+              onClick={activeStep === 0 ? handleNext : addProduct}
+            >
+              {activeStep === 0 ? "next" : "add"}
+            </button>
+          </div>
+        </form>
+      </Box>
     </Box>
   );
 }

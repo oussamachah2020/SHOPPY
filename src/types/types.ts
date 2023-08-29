@@ -17,6 +17,7 @@ export interface ProductType {
   pieces: number;
   imageURL: string;
   category: string;
+  coupon: number;
 }
 
 export interface PurchaseType {
@@ -44,6 +45,7 @@ export interface adminProduct {
   imageURL: string[];
   pieces: string;
   price: string;
+  coupon: number;
 }
 
 export interface ordersType {

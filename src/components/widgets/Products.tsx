@@ -99,7 +99,19 @@ const Products = () => {
                 <h2 className="card-title">{product.title}</h2>
                 <p>{product.description}</p>
                 <div className="card-actions justify-between items-center">
-                  <p className="text-lg">{product.price} DHS</p>
+                  {product.coupon === 0 ? (
+                    <p className="text-lg">{product.price} DHS</p>
+                  ) : (
+                    <div className="flex justify-center items-center gap-3">
+                      <p className="text-lg line-through">
+                        {product.price} DHS
+                      </p>
+                      <p className="text-2xl text-primary">
+                        {product.price - (product.price * product.coupon) / 100}{" "}
+                        DHS
+                      </p>
+                    </div>
+                  )}
                   <button
                     className="btn btn-primary text-white"
                     onClick={() => handleProductSelection(product)}
