@@ -87,6 +87,14 @@ const Products = () => {
               className="card card-compact w-[100%] mt-10 bg-white text-black shadow-xl relative"
               onClick={() => navigate("/purchases")}
             >
+              {product.reducedPrice ? (
+                <div className="indicator">
+                  <span className="absolute top-3 left-6 bottom-0 z-10 text-white text-2xl -rotate-45">
+                    -{product.percentage}%
+                  </span>
+                  <div className="triangle-topleft bagde relative"></div>
+                </div>
+              ) : null}
               <figure className="mb-40">
                 <img
                   src={product.imageURL}

@@ -18,6 +18,7 @@ export interface ProductType {
   imageURL: string;
   category: string;
   reducedPrice: number;
+  percentage: number;
 }
 
 export interface PurchaseType {

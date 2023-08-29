@@ -53,6 +53,22 @@ function AddProductForm({
     }
   };
 
+  function getRandomNaturalNumber() {
+    // Generate a random decimal number between 0 and 1
+    const randomDecimal = Math.random();
+
+    // Calculate the range size (number of possible values)
+    const rangeSize = 50 - 10 + 1;
+
+    // Scale the random decimal to fit the desired range and add the minimum value (10)
+    const randomNatural = Math.floor(randomDecimal * rangeSize) + 10;
+
+    return randomNatural;
+  }
+
+  // Call the function to get a random natural number between 10 and 50
+  const randomNum = getRandomNaturalNumber();
+
   const onSubmit = async () => {};
 
   const { values, handleChange, handleSubmit } = useFormik<adminProduct>({
@@ -75,7 +91,11 @@ function AddProductForm({
 
     if (dbRef.key === userId) {
       const newProductRef = push(dbRef);
-      set(newProductRef, { ...values, id: uuidv4() })
+      set(newProductRef, {
+        ...values,
+        id: uuidv4(),
+        percentage: values.reducedPrice !== 0 ?? randomNum,
+      })
         .then(() => {
           toast.success("Products Added Successfully");
           closeModal();
