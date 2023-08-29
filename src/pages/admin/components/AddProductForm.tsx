@@ -63,7 +63,7 @@ function AddProductForm({
       imageURL: [],
       price: "",
       pieces: "",
-      coupon: 0,
+      reducedPrice: 0,
     },
     onSubmit,
   });
@@ -324,21 +324,21 @@ function AddProductForm({
               </div>
               <div className="form-control w-full ">
                 <label className="label">
-                  <span className="label-text text-[#000000a6] text-md font-medium ">
-                    add coupon (optional)
+                  <span className="label-text text-[#000000a6] text-md font-medium mt-3">
+                    add reduced price (optional)
                   </span>
                 </label>
                 <label className="input-group">
                   <input
                     id="coupon"
                     name="coupon"
-                    value={values.coupon}
+                    value={values.reducedPrice}
                     onChange={handleChange}
-                    type="number"
+                    type="text"
                     placeholder="example: 30"
                     className="input input-bordered input-primary bg-white text-black w-full"
                   />
-                  <span className="bg-purple-600 text-white">%</span>
+                  <span className="bg-purple-600 text-white">DHS</span>
                 </label>
               </div>
             </div>

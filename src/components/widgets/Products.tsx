@@ -99,7 +99,7 @@ const Products = () => {
                 <h2 className="card-title">{product.title}</h2>
                 <p>{product.description}</p>
                 <div className="card-actions justify-between items-center">
-                  {product.coupon === 0 ? (
+                  {product.reducedPrice === 0 ? (
                     <p className="text-lg">{product.price} DHS</p>
                   ) : (
                     <div className="flex justify-center items-center gap-3">
@@ -107,8 +107,7 @@ const Products = () => {
                         {product.price} DHS
                       </p>
                       <p className="text-2xl text-primary">
-                        {product.price - (product.price * product.coupon) / 100}{" "}
-                        DHS
+                        {product.reducedPrice} DHS
                       </p>
                     </div>
                   )}
