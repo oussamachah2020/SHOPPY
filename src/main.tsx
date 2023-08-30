@@ -14,6 +14,8 @@ import AuthModal from "./pages/admin/AuthModal";
 import StoreOwnerDashboard from "./pages/admin/StoreOwnerDashboard";
 import Orders from "./pages/admin/Orders";
 import OrderDetails from "./pages/admin/OrderDetails";
+import { NextUIProvider } from "@nextui-org/react";
+
 // import SignUp from "./pages/auth/SignUp";
 // import SignIn from "./pages/auth/SignIn";
 
@@ -66,10 +68,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <I18nextProvider i18n={i18next}>
-      <RouterProvider router={router} />
-      <Toaster position="top-right" reverseOrder={false} />
-    </I18nextProvider>
+    <NextUIProvider>
+      <I18nextProvider i18n={i18next}>
+        <RouterProvider router={router} />
+        <Toaster position="top-right" reverseOrder={false} />
+      </I18nextProvider>
+    </NextUIProvider>
     {/* <App /> */}
   </React.StrictMode>
 );

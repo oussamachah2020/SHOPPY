@@ -1,4 +1,5 @@
 import daisyui from "daisyui";
+import { nextui } from "@nextui-org/react";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -12,5 +13,6 @@ export default {
       // => @media (min-width: 768px) { ... }
     },
   },
-  plugins: [daisyui],
+  darkMode: "class",
+  plugins: [daisyui, nextui()],
 };

@@ -55,7 +55,7 @@ function LineChart() {
       options={options}
       data={data}
       width={"1200%"}
-      height={430}
+      height={"430%"}
       style={{
         padding: 10,
         boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",

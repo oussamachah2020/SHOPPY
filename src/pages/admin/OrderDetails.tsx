@@ -44,7 +44,7 @@ const OrderDetails = () => {
   });
 
   return (
-    <div className="card lg:card-side shadow-xl mx-36 mt-20 p-10">
+    <div className="card md:card-side shadow-xl mx-36 mt-20 p-10">
       <figure className="w-[300px]">
         <img
           src={order?.imageURL}

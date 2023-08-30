@@ -5,6 +5,14 @@ import { useNavigate } from "react-router-dom";
 import useProductsStore from "../../store/productsStore";
 import { get, ref } from "firebase/database";
 import { db } from "../../firebase";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Image,
+} from "@nextui-org/react";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
@@ -84,7 +92,7 @@ const Products = () => {
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="card card-compact w-[100%] mt-10 bg-white text-black shadow-xl relative"
+              className="card card-compact h-full w-[100%] mt-10 bg-white text-black shadow-xl relative"
               onClick={() => navigate("/purchases")}
             >
               {product.reducedPrice ? (
@@ -95,12 +103,12 @@ const Products = () => {
                   <div className="triangle-topleft bagde relative"></div>
                 </div>
               ) : null}
-              <figure className="mb-40">
+              <figure className="mb-40 flex flex-1">
                 <img
                   src={product.imageURL}
                   alt={product.title}
-                  width={"300px"}
-                  height={"100px"}
+                  width={"200px"}
+                  height={"50px"}
                 />
               </figure>
               <div className="card-body flex-grow-0 absolute bottom-0 right-0 left-0">
