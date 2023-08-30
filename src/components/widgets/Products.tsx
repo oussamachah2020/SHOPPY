@@ -5,14 +5,6 @@ import { useNavigate } from "react-router-dom";
 import useProductsStore from "../../store/productsStore";
 import { get, ref } from "firebase/database";
 import { db } from "../../firebase";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Image,
-} from "@nextui-org/react";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
