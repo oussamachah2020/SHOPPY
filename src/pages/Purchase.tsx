@@ -121,22 +121,20 @@ const Purchase = () => {
             </div>
           </Box>
           <div className="mt-10 md:ml-10">
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 3,
-              }}
-            >
+            <div>
               <h2 className="italic font-semibold text-lg">
                 {selectedProduct.title}
               </h2>
-              <h2 className="font-semibold text-lg text-purple-800">
-                {totalPrice} DHS
-              </h2>
-            </Box>
-            <p>{selectedProduct.description}</p>
+              <div className="flex justify-strart items-start flex-col-reverse md:flex-col">
+                <p className="w-[80%] mt-2">{selectedProduct.description}</p>
+                <h2 className="font-semibold text-2xl text-purple-800 mt-5">
+                  {totalPrice} DHS{" "}
+                  <span className="text-black text-xl line-through">
+                    {selectedProduct.reducedPrice} DHS
+                  </span>
+                </h2>
+              </div>
+            </div>
           </div>
         </div>
         <form

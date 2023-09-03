@@ -84,43 +84,41 @@ const Products = () => {
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="card card-compact h-full w-[100%] mt-10 bg-white text-black shadow-xl relative"
-              onClick={() => navigate("/purchases")}
+              className="card card-compact w-96 bg-white shadow-xl cursor-pointer"
+              onClick={() => handleProductSelection(product)}
             >
-              {product.reducedPrice ? (
-                <div className="indicator">
-                  <span className="absolute top-3 left-6 bottom-0 z-10 text-white text-2xl -rotate-45">
+              {product.showReductionBadge === true ? (
+                <div className="triangle-topleft">
+                  <p className="absolute top-5 left-2 -rotate-45 text-white text-xl">
                     -{product.percentage}%
-                  </span>
-                  <div className="triangle-topleft bagde relative"></div>
+                  </p>
                 </div>
               ) : null}
-              <figure className="mb-40 flex flex-1">
+              <figure>
                 <img
-                  src={product.imageURL}
-                  alt={product.title}
-                  width={"200px"}
-                  height={"50px"}
+                  src={product.imageURL[0]}
+                  alt="Shoes"
+                  className="h-[250px] w-full object-contain"
                 />
               </figure>
-              <div className="card-body flex-grow-0 absolute bottom-0 right-0 left-0">
+              <div className="card-body">
                 <h2 className="card-title">{product.title}</h2>
-                <p>{product.description}</p>
-                <div className="card-actions justify-between items-center">
-                  {product.reducedPrice === 0 ? (
-                    <p className="text-lg">{product.price} DHS</p>
-                  ) : (
-                    <div className="flex justify-center items-center gap-3">
-                      <p className="text-lg line-through">
+                <p className="h-fit">{product.description}</p>
+                <div className="card-actions  justify-between items-center">
+                  {product.reducedPrice ? (
+                    <div>
+                      <p className="text-black text-lg line-through">
                         {product.price} DHS
                       </p>
-                      <p className="text-2xl text-primary">
+                      <p className="text-purple-700 text-2xl font-semibold">
                         {product.reducedPrice} DHS
                       </p>
                     </div>
+                  ) : (
+                    <p className="text-black text-xl">{product.price} DHS</p>
                   )}
                   <button
-                    className="btn btn-primary text-white"
+                    className="btn btn-primary"
                     onClick={() => handleProductSelection(product)}
                   >
                     Buy Now

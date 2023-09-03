@@ -19,6 +19,7 @@ export interface ProductType {
   category: string;
   reducedPrice: number;
   percentage: number;
+  showReductionBadge: boolean;
 }
 
 export interface PurchaseType {
@@ -47,6 +48,7 @@ export interface adminProduct {
   pieces: string;
   price: string;
   reducedPrice: number;
+  showReductionBadge: boolean;
 }
 
 export interface ordersType {

@@ -80,9 +80,14 @@ function AddProductForm({
       price: "",
       pieces: "",
       reducedPrice: 0,
+      showReductionBadge: false,
     },
     onSubmit,
   });
+
+  const toggleBadget = () => {
+    values.showReductionBadge = !values.showReductionBadge;
+  };
 
   const addProduct = async () => {
     setIsLoading(true);
@@ -94,7 +99,7 @@ function AddProductForm({
       set(newProductRef, {
         ...values,
         id: uuidv4(),
-        percentage: values.reducedPrice !== 0 ?? randomNum,
+        percentage: values.showReductionBadge == true ? randomNum : 0,
       })
         .then(() => {
           toast.success("Products Added Successfully");
@@ -350,16 +355,24 @@ function AddProductForm({
                 </label>
                 <label className="input-group">
                   <input
-                    id="coupon"
-                    name="coupon"
+                    id="reducedPrice"
+                    name="reducedPrice"
                     value={values.reducedPrice}
                     onChange={handleChange}
-                    type="text"
+                    type="number"
                     placeholder="example: 30"
                     className="input input-bordered input-primary bg-white text-black w-full"
                   />
                   <span className="bg-purple-600 text-white">DHS</span>
                 </label>
+              </div>
+              <div className="flex justify-start items-end gap-3 mt-5">
+                <p>Show Percentage badget on the product: </p>
+                <input
+                  type="checkbox"
+                  className="toggle toggle-success bg-white"
+                  onClick={toggleBadget}
+                />
               </div>
             </div>
           )}
