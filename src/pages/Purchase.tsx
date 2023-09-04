@@ -85,11 +85,11 @@ const Purchase = () => {
   };
 
   useEffect(() => {
-    if (selectedProduct?.price) {
-      const totalPrice = Math.floor(selectedProduct.price * quantity);
+    if (selectedProduct?.reducedPrice) {
+      const totalPrice = Math.floor(selectedProduct.reducedPrice * quantity);
       setTotalPrice(totalPrice);
     }
-  }, [quantity, selectedProduct?.price]);
+  }, [quantity, selectedProduct?.reducedPrice]);
 
   return (
     <div className="w-full py-20 md:py-10 px-5 md:px-24 text-black">
@@ -126,13 +126,7 @@ const Purchase = () => {
                 {selectedProduct.title}
               </h2>
               <div className="flex justify-strart items-start flex-col-reverse md:flex-col">
-                <p className="w-[80%] mt-2">{selectedProduct.description}</p>
-                <h2 className="font-semibold text-2xl text-purple-800 mt-5">
-                  {totalPrice} DHS{" "}
-                  <span className="text-black text-xl line-through">
-                    {selectedProduct.reducedPrice} DHS
-                  </span>
-                </h2>
+                <p className="w-[100%] mt-2">{selectedProduct.description}</p>
               </div>
             </div>
           </div>
@@ -186,6 +180,14 @@ const Purchase = () => {
             placeholder="Enter your address"
             className="input input-bordered input-primary w-full bg-white"
           />
+          <div>
+            <h2 className="font-semibold text-2xl text-purple-800 mt-5">
+              <span className="text-black text-xl line-through mr-3">
+                {selectedProduct.price} DHS{" "}
+              </span>
+              {totalPrice} DHS
+            </h2>
+          </div>
           <Box
             sx={{
               display: "flex",

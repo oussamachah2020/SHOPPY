@@ -75,7 +75,7 @@ const Products = () => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-1 justify-center md:grid-cols-4 md:gap-4">
+      <div className="grid grid-cols-1 justify-center md:grid-cols-4 md:gap-4 gap-4 mt-4">
         {loading ? (
           <div className="flex justify-center items-center w-44">
             <CircularProgress />
@@ -84,7 +84,7 @@ const Products = () => {
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="card card-compact w-96 bg-white shadow-xl cursor-pointer"
+              className="card card-compact w-[100%] bg-white shadow-xl cursor-pointer"
               onClick={() => handleProductSelection(product)}
             >
               {product.showReductionBadge === true ? (
