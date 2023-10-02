@@ -63,7 +63,7 @@ const Products = () => {
                 <button
                   key={product}
                   value={product}
-                  className={`border-2 border-[#7779e4] px-5 rounded-full ${
+                  className={`border-2 border-[#7779e4] px-5 h-12 rounded-full ${
                     category === product ? "bg-[#7779e4] text-white" : ""
                   }`}
                   onClick={() => setCategory(product)}
