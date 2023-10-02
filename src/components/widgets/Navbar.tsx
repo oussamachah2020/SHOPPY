@@ -1,6 +1,4 @@
-import { Button } from "@mui/material";
 import Logo from "../../assets/shoppy-logo.svg";
-import SearchIcon from "@mui/icons-material/Search";
 // import LoginIcon from "@mui/icons-material/Login";
 // import { useState } from "react";
 // import { signOut } from "firebase/auth";
