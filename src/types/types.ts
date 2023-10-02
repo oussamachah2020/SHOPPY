@@ -20,6 +20,7 @@ export interface ProductType {
   reducedPrice: number;
   percentage: number;
   showReductionBadge: boolean;
+  image: string;
 }
 
 export interface PurchaseType {

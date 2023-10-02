@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFormik } from "formik";
 import { PurchaseSchema } from "../types/validation.schemas";
 import { PurchaseType } from "../types/types";
@@ -16,11 +16,12 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { Box } from "@mui/material";
+import ReturnBtn from "@/assets/return.png";
 
 const Purchase = () => {
   const [quantity, setQuantity] = useState<number>(1);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [productImage, setProductImage] = useState<number>(0);
+  // const [totalPrice, setTotalPrice] = useState<number>(0);
+  // const [productImage, setProductImage] = useState<number>(0);
   const { selectedProduct } = useProductsStore();
   const navigate = useNavigate();
 
@@ -84,27 +85,29 @@ const Purchase = () => {
     setQuantity((prev) => prev - 1);
   };
 
-  useEffect(() => {
-    if (selectedProduct?.reducedPrice) {
-      const totalPrice = Math.floor(selectedProduct.reducedPrice * quantity);
-      setTotalPrice(totalPrice);
-    }
-  }, [quantity, selectedProduct?.reducedPrice]);
+  const totalPrice = useMemo(() => {
+    return selectedProduct.price * quantity;
+  }, [quantity]);
 
   return (
-    <div className="w-full py-20 md:py-10 px-5 md:px-24 text-black">
-      <h2 className="mb-10 text-xl md:text-3xl text-black">
+    <div className="w-full py-20 md:py-10 px-5 md:px-20 text-black">
+      <h2 className="mb-10 text-xl md:text-3xl text-black flex justify-start gap-5 items-center cursor-pointer">
+        <img
+          src={ReturnBtn}
+          alt="return button"
+          onClick={() => navigate("/")}
+        />
         Purchased Products
       </h2>
-      <div className="flex flex-col md:flex-row md:justify-between w-full">
-        <div className="flex flex-col justify-start items-start md:flex-row md:items-center ">
+      <div className="flex flex-col md:flex-row md:justify-between w-full mt-20 gap-10">
+        <div className="flex flex-col justify-start items-start md:flex-row md:items-start align-super">
+          <img
+            src={selectedProduct.image}
+            alt={selectedProduct.title}
+            className="w-[20rem] h-full"
+          />
           <Box>
-            <img
-              src={selectedProduct.imageURL[productImage]}
-              alt={selectedProduct.title}
-              className="md:w-[350px]"
-            />
-            <div className="flex justify-center items-center">
+            {/* <div className="flex justify-center items-center">
               {selectedProduct.imageURL.map(
                 (images: string | undefined, index: number) => (
                   <button
@@ -118,7 +121,7 @@ const Purchase = () => {
                   </button>
                 )
               )}
-            </div>
+            </div> */}
           </Box>
           <div className="mt-10 md:ml-10">
             <div>
@@ -126,13 +129,13 @@ const Purchase = () => {
                 {selectedProduct.title}
               </h2>
               <div className="flex justify-strart items-start flex-col-reverse md:flex-col">
-                <p className="w-[100%] mt-2">{selectedProduct.description}</p>
+                <p className="w-[90%] mt-2">{selectedProduct.description}</p>
               </div>
             </div>
           </div>
         </div>
         <form
-          className=" flex flex-wrap gap-3 justify-start items-center w-[100%] md:w-[40%] p-5 shadow-lg h-[100%] rounded-md"
+          className=" flex flex-wrap gap-3 justify-start items-center w-[100%] md:w-[100%] p-5 shadow-lg h-[100%] rounded-md"
           onSubmit={handleSubmit}
         >
           <div className="visible border border-gray-200 mt-3 md:hidden"></div>
@@ -182,9 +185,9 @@ const Purchase = () => {
           />
           <div>
             <h2 className="font-semibold text-2xl text-purple-800 mt-5">
-              <span className="text-black text-xl line-through mr-3">
-                {selectedProduct.price} DHS{" "}
-              </span>
+              {/* <span className="text-black text-xl line-through mr-3">
+                {} DHS{" "}
+              </span> */}
               {totalPrice} DHS
             </h2>
           </div>

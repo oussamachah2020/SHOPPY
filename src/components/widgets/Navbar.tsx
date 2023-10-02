@@ -29,37 +29,12 @@ function Navbar() {
 
   return (
     <div className="navbar bg-[#5a38e4] px-2">
-      <div className="flex-1">
+      <div className="flex-1 flex justify-center">
         <a href="/">
           <img src={Logo} alt="shoppy" width={120} height={120} />
         </a>
       </div>
-      <div className="flex relative right-20 gap-2">
-        <div className="form-control hidden md:block">
-          <div className="relative hidden md:block">
-            <Button
-              sx={{
-                color: "#fff",
-                backgroundColor: "#A689E1",
-                position: "absolute",
-                right: 0,
-                top: 0,
-                height: "100%",
-                "&:hover": {
-                  backgroundColor: "#A689E1",
-                },
-              }}
-            >
-              <SearchIcon />
-            </Button>
-            <input
-              type="text"
-              placeholder="Search..."
-              className="input input-bordered w-[2em] md:w-[50em] bg-white "
-            />
-          </div>
-        </div>
-      </div>
+      <div className="flex relative right-20 gap-2"></div>
       <div className="flex flex-nowrap gap-2 ">
         <details className="dropdown ">
           <summary className="btn btn-ghost bg-transparent border-none">
