@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function Countdown() {
   const initialCountdown = {
@@ -9,6 +10,7 @@ function Countdown() {
   };
 
   const [countdown, setCountdown] = useState(initialCountdown);
+  const [t] = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,7 +42,7 @@ function Countdown() {
             style={{ "--value": countdown.days } as React.CSSProperties}
           ></span>
         </span>
-        days
+        {t("offer.days")}
       </div>
       <div className="flex flex-col">
         <span className="countdown font-mono text-center text-2xl md:text-5xl">
@@ -48,7 +50,7 @@ function Countdown() {
             style={{ "--value": countdown.hours } as React.CSSProperties}
           ></span>
         </span>
-        hours
+        {t("offer.hours")}
       </div>
       <div className="flex flex-col">
         <span className="countdown font-mono text-center text-2xl md:text-5xl">
@@ -56,7 +58,7 @@ function Countdown() {
             style={{ "--value": countdown.minutes } as React.CSSProperties}
           ></span>
         </span>
-        min
+        {t("offer.minutes")}
       </div>
       <div className="flex flex-col">
         <span className="countdown font-mono text-center text-2xl md:text-5xl">
@@ -64,7 +66,7 @@ function Countdown() {
             style={{ "--value": countdown.seconds } as React.CSSProperties}
           ></span>
         </span>
-        sec
+        {t("offer.seconds")}
       </div>
     </div>
   );

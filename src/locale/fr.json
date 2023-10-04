@@ -1,0 +1,14 @@
+{
+    "title": "Bienvenue à",
+    "description": "Nous sommes fiers d'offrir une sélection diversifiée et organisée de produits, allant des dernières tendances de la mode à l'électronique de pointe et tout le reste. Avec notre interface conviviale et nos options de paiement sécurisées, faire du shopping chez Shoppy est un jeu d'enfant.",
+    "btnText": "Exploiter",
+    "offer": {
+        "title": "MEILLEURES OFFRES",
+        "description": "🛍️🎁 Alerte Offre Shopping ! 🎁🛍️ Offrez-vous une virée shopping irrésistible avec notre offre exclusive à durée limitée ! Préparez-vous à vous offrir un monde d'économies et de style. Profitez de remises à couper le souffle allant jusqu'à 70% sur les dernières tendances de la mode, de l'électronique, de la décoration intérieure, etc.",
+        "days": "jours",
+        "hours": "heures",
+        "minutes": "minutes",
+        "seconds": "secondes",
+        "btnLabel": "Dépêchez-vous et découvrez nos meilleures offres"
+    }
+}

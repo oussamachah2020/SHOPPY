@@ -3,8 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ProductType } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import useProductsStore from "../../store/productsStore";
-// import { get, ref } from "firebase/database";
-// import { db } from "../../firebase";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
@@ -53,17 +51,17 @@ const Products = () => {
     <div className="py-24 px-5 md:p-24">
       <div className="flex flex-wrap md:flex-nowrap gap-2 justify-center md:justify-between items-center">
         <div className="flex justify-start gap-20 items-center flex-row">
-          <h2 className="text-2xl text-center text-black">
+          <h2 className="w-full text-[18px] md:text-2xl text-center text-black">
             Best Selling Products
           </h2>
 
           {[...new Set(productsData.map((product) => product.category))].map(
             (product) => (
-              <div className="flex justify-center items-center flex-row">
+              <div className="md:flex justify-center items-center flex-row hidden">
                 <button
                   key={product}
                   value={product}
-                  className={`border-2 border-[#7779e4] px-5 h-12 rounded-full ${
+                  className={`border-2 border-[#7779e4] w-[10rem]  rounded-full ${
                     category === product ? "bg-[#7779e4] text-white" : ""
                   }`}
                   onClick={() => setCategory(product)}
@@ -73,6 +71,22 @@ const Products = () => {
               </div>
             )
           )}
+          <select className="select select-primary bg-transparent text-black  flex md:hidden">
+            {[...new Set(productsData.map((product) => product.category))].map(
+              (product) => (
+                <option
+                  key={product}
+                  value={product}
+                  className={`border-2 border-[#7779e4] px-5 h-12 rounded-full ${
+                    category === product ? "bg-[#7779e4] text-white" : ""
+                  }`}
+                  onClick={() => setCategory(product)}
+                >
+                  {product}
+                </option>
+              )
+            )}
+          </select>
         </div>
       </div>
       <div className="grid grid-cols-1 justify-center md:grid-cols-4 md:gap-4 gap-4 mt-20">
