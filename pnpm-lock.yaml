@@ -83,6 +83,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.14.2
     version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+  talkr:
+    specifier: ^3.4.0
+    version: 3.4.0
   uuid:
     specifier: ^9.0.0
     version: 9.0.1
@@ -8804,6 +8807,10 @@ packages:
       sucrase: 3.34.0
     transitivePeerDependencies:
       - ts-node
+
+  /talkr@3.4.0:
+    resolution: {integrity: sha512-SuaqeeneudLbeNPIDfGYitfQRY4igkNCZWbSBzj2z1X74PqFnp5LQ9T0+CfYbY0Lf8jpAsBAOXbDwTAOMX9qoA==}
+    dev: false
 
   /tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}

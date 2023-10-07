@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import Logo from "../../assets/shoppy-logo.svg";
 
 function Navbar() {
-  const [t, i18n] = useTranslation();
+  const [_, i18n] = useTranslation();
 
   return (
     <div className="navbar bg-[#5a38e4] px-2 fixed z-30">

@@ -3,11 +3,15 @@ import { useEffect, useMemo, useState } from "react";
 import { ProductType } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import useProductsStore from "../../store/productsStore";
+import { useTranslation } from "react-i18next";
 
 const Products = () => {
   const [productsData, setProductsData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [category, setCategory] = useState<string>("");
+  // const { T } = useT();
+  const { t } = useTranslation();
+
   const { setSelectedProduct } = useProductsStore();
   const navigate = useNavigate();
 
@@ -48,11 +52,11 @@ const Products = () => {
   }, [category, productsData]);
 
   return (
-    <div className="py-24 px-5 md:p-24">
+    <div className="py-24 px-5 md:p-24" id="products">
       <div className="flex flex-wrap md:flex-nowrap gap-2 justify-center md:justify-between items-center">
         <div className="flex justify-start gap-20 items-center flex-row">
-          <h2 className="w-full text-[18px] md:text-2xl text-center text-black">
-            Best Selling Products
+          <h2 className="w-full text-[1+px] md:text-2xl text-center text-black">
+            {t("sells")}
           </h2>
 
           {[...new Set(productsData.map((product) => product.category))].map(
@@ -116,7 +120,7 @@ const Products = () => {
                 />
               </figure>
               <div className="card-body">
-                <h2 className="card-title">{product.title}</h2>
+                <h2 className="card-title">{t(product.title)}</h2>
                 <div className="card-actions  justify-between items-center">
                   {product.reducedPrice ? (
                     <div>

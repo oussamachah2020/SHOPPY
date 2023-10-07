@@ -6,6 +6,10 @@
   background: #fcfcfc;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .triangle-topleft {
   width: 0;
   height: 0;

@@ -14,14 +14,32 @@ const Hero = () => {
       <div className="hero-content text-center ">
         <div className="max-w-md md:max-w-5xl ">
           <h2 className="mb-5 text-3xl font-bold text-white">
-            {t("title")}{" "}
-            <span className="uppercase text-[#8048e0]">shoppy</span>
+            {i18n.language === "ar" ? (
+              <>
+                <span className="uppercase text-[#a17edd]">
+                  {t("storeName")}{" "}
+                </span>
+                {t("title")}{" "}
+              </>
+            ) : (
+              <>
+                {t("title")}{" "}
+                <span className="uppercase text-[#a17edd]">
+                  {t("storeName")}{" "}
+                </span>
+              </>
+            )}
           </h2>
+
           <p className="mb-5 text-white font-semibold md:text-xl md:leading-8 md:w-[100%] text-center ">
             {" "}
             {t("description")}
           </p>
-          <button className="btn btn-primary text-white">{t("btnText")}</button>
+          <a href="#products">
+            <button className="btn btn-primary text-white">
+              {t("btnText")}
+            </button>
+          </a>
         </div>
       </div>
     </div>

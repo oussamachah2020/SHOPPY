@@ -1,5 +1,6 @@
 {
     "title": "Bienvenue à",
+    "storeName": "SHOPPY",
     "description": "Nous sommes fiers d'offrir une sélection diversifiée et organisée de produits, allant des dernières tendances de la mode à l'électronique de pointe et tout le reste. Avec notre interface conviviale et nos options de paiement sécurisées, faire du shopping chez Shoppy est un jeu d'enfant.",
     "btnText": "Exploiter",
     "offer": {
@@ -10,5 +11,23 @@
         "minutes": "minutes",
         "seconds": "secondes",
         "btnLabel": "Dépêchez-vous et découvrez nos meilleures offres"
-    }
+    },
+    "product": {
+        "title": "__title__"
+    },
+    "sells": "Produits les plus vendus",
+    "footer": {
+        "service": {
+            "title": "services",
+            "services": "services",
+            "branding": "l'image de marque",
+            "advertisement": "Publicité"
+        },
+        "Usage": {
+            "title": "usage",
+            "termsOfUse": "Conditions d'utilisation",
+            "privacy": "Confidentialité"
+        }
+
+    }   
 }
