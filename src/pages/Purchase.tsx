@@ -86,7 +86,7 @@ const Purchase = () => {
   };
 
   const totalPrice = useMemo(() => {
-    return selectedProduct.price * quantity;
+    return (selectedProduct.price * quantity).toFixed(1);
   }, [quantity]);
 
   return (
