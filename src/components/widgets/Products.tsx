@@ -52,11 +52,11 @@ const Products = () => {
   }, [category, productsData]);
 
   return (
-    <div className="py-24 px-5 md:p-24" id="products">
+    <div className="py-24 px-5 " id="products">
       <div className="flex flex-wrap md:flex-nowrap gap-2 justify-center md:justify-between items-center">
         <div className="flex justify-start gap-20 items-center flex-row">
-          <h2 className="w-full text-[1+px] md:text-2xl text-center text-black">
-            {t("sells")}
+          <h2 className="w-full text-[18px] md:text-2xl text-center text-black">
+            Produits les plus vendus
           </h2>
 
           {[...new Set(productsData.map((product) => product.category))].map(
@@ -93,7 +93,7 @@ const Products = () => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-1 justify-center md:grid-cols-4 md:gap-4 gap-4 mt-20">
+      <div className="grid grid-cols-1 justify-center md:grid-cols-4 md:gap-8 md:pl-0 gap-4 mt-20">
         {loading ? (
           <div className="flex justify-center items-center w-44">
             <CircularProgress />

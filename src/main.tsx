@@ -12,7 +12,6 @@ import StoreOwnerDashboard from "./pages/admin/StoreOwnerDashboard";
 import Orders from "./pages/admin/Orders";
 import OrderDetails from "./pages/admin/OrderDetails";
 import { NextUIProvider } from "@nextui-org/react";
-import "./i18n";
 
 const router = createBrowserRouter([
   {

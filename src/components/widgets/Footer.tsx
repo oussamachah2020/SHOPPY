@@ -1,23 +1,21 @@
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { useTranslation } from "react-i18next";
 
 const Footer = () => {
-  const [t] = useTranslation();
   return (
     <>
       <footer className="footer p-10 bg-base-200 text-base-content">
         <div>
-          <span className="footer-title">{t("footer.service.title")}</span>
-          <a className="link link-hover">{t("footer.service.services")}</a>
-          <a className="link link-hover">{t("footer.service.branding")}</a>
-          <a className="link link-hover">{t("footer.service.advertisement")}</a>
+          <span className="footer-title">services</span>
+          <a className="link link-hover">services</a>
+          <a className="link link-hover">marque</a>
+          <a className="link link-hover">publicité</a>
         </div>
         <div>
-          <span className="footer-title">{t("footer.Usage.title")}</span>
-          <a className="link link-hover">{t("footer.Usage.termsOfUse")}</a>
-          <a className="link link-hover">{t("footer.Usage.privacy")}</a>
+          <span className="footer-title">usage</span>
+          <a className="link link-hover">Conditions d'utilisation</a>
+          <a className="link link-hover">Confidentialité</a>
         </div>
       </footer>
       <footer className="footer px-10 py-4 border-t bg-base-200 text-base-content border-base-300">
